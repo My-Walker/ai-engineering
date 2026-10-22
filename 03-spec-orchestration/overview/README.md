@@ -28,15 +28,15 @@
 
 ## 现有规范包
 
-| 包 | 说明 | 当前位置 |
-|----|------|----------|
-| `mdd-ai-eng-spec` | 通用规范包（标识 `mdd-ai-eng`，npm `@mdd-ai-eng/specs`） | 仍在原仓，见 [`../packages/README.md`](../packages/README.md) |
+| 包 | 说明 | 位置 |
+|----|------|------|
+| `mdd-ai-eng-spec` | 通用规范包（标识 `mdd-ai-eng`，npm `@mdd-ai-eng/specs`） | [`../packages/mdd-ai-eng-spec/`](../packages/mdd-ai-eng-spec/) |
 
-包内正文目录 `ai-engineering-specs/` **不在本工作区修改**；本层 `docs/` / `overview/` 只做层设计与索引。
+层级 `docs/` / `overview/` 只做层设计与索引；改规范正文请到对应 package 目录。
 
 ## 现状
 
-L3 是当前唯一有落地产品的层；建设重心继续放在规范包质量与评测。
+L3 是当前唯一有落地产品的层；通用包已干净迁入 `packages/`。建设重心继续放在规范包质量与评测。
 
 ## 详细文档
 

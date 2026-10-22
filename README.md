@@ -16,6 +16,8 @@
 - `overview/` — 本层总纲（定位、边界、非目标、现状）
 - `docs/` — 本层详细文档（后续填充）
 
-规范产品示例：`mdd-ai-eng-spec` 是 L3 下的 **规范包之一**，当前仍在原 git 仓，见 [`03-spec-orchestration/packages/README.md`](./03-spec-orchestration/packages/README.md)。
+规范产品：`mdd-ai-eng-spec` 是 L3 下的 **规范包之一**，位于 [`03-spec-orchestration/packages/mdd-ai-eng-spec`](./03-spec-orchestration/packages/mdd-ai-eng-spec/)，npm 仍为 `@mdd-ai-eng/specs`。包登记见 [`packages/README.md`](./03-spec-orchestration/packages/README.md)。
+
+本仓库是体系 **伞仓**（git）；各规范包在子目录内维护版本并手动 `npm publish`。
 
 原则：**分工独立、运行组合。**
