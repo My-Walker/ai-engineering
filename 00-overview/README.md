@@ -80,7 +80,7 @@ ai-engineering/
 
 - 总纲与详细文档分离：`overview/` 短而稳，`docs/` 可迭代填充。  
 - **不把** 全体系总纲塞进某一个规范包仓库的发布正文。  
-- 现有 `mdd-ai-eng-spec` 暂不搬迁；在 L3 `packages/` 中保留链接说明。
+- 规范正文在 L3 `packages/<包名>/ai-engineering-specs/`；层级 `overview/` / `docs/` 只做层设计与索引。
 
 ## 7. 学习与建设顺序（现状）
 
@@ -92,6 +92,6 @@ ai-engineering/
 
 ## 8. 非目标（本工作区）
 
-- 不在此复制或修改 `mdd-ai-eng-spec` 内 `ai-engineering-specs/` 规范正文。  
+- 不把各包 `ai-engineering-specs/` 规范正文复制进层级 `docs/` / `overview/`（改规范请直接编辑对应 package）。  
 - 不强制五层立刻各有独立 git/npm。  
 - 不把 demo/杂项项目放进本体系根。
