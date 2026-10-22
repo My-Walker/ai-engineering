@@ -14,6 +14,7 @@ ai-engineering/03-spec-orchestration/packages/mdd-ai-eng-spec/
 - npm 包名不变：`@mdd-ai-eng/specs`；在本目录手动 `npm publish`。
 - 旧独立仓 `https://github.com/My-Walker/mdd-ai-eng-spec` 仅作历史归档，勿再推送功能。
 - 干净迁入基线：旧仓 `1.2.0` / commit `c9ca89f`。
+- **Agent 激活**：请打开伞仓根（不是本包目录、也不是旧路径）。伞仓根锚点指向本包 `ai-engineering-specs/AGENTS.md`。勿在伞仓根安装本 npm 包。在本包目录执行 `node scripts/install-anchors.js` 只会刷新**本包根**锚点，供单独打开本包目录时使用。
 
 ## 发布内容
 
@@ -26,7 +27,7 @@ ai-engineering/03-spec-orchestration/packages/mdd-ai-eng-spec/
 `package.json` 本身会被 npm 一并发布。`DEVELOPMENT.md`、`test/`、`evals/`、`ai-engineering-sandbox/`、`.cursor/`、`.kilocoderrules` 不在 `files` 中，不会发布。
 
 版本只记录在本包目录 `package.json`。发布源由本包 `.npmrc` 固定为官方源。  
-发版步骤：在本目录改 version → 在伞仓根提交 → 仍在本目录执行 `npm publish`（不要在伞仓根 publish）。
+推荐发版：在本目录执行 `npm run release -- <版本>`（升版本、检查、推伞仓 `main`、打 `specs-v*` tag），再在本目录手动 `npm publish`。不要在伞仓根 publish。
 
 ## 目录
 
@@ -38,7 +39,7 @@ scripts/                     维护脚本。作用与用法见 scripts/README.md
   install-anchors.js          写入或刷新锚点，随包发布
   check-system.sh             校验规范索引路径
   run-evals.py                检查已保存的真实 Agent 回复
-  release.sh                  发布准备（升版本/合 main/打 tag，不执行 publish）
+  release.sh                  发布准备（升版本/推 main/打 specs-v* tag，不执行 publish）
 test/                         锚点安装单元测试
 evals/                        行为评测。用法见 evals/README.md
   test-suite.json             题目与通过条件
@@ -58,20 +59,21 @@ ai-engineering-sandbox/       试写代码目录，不发布
 
 ## 本地命令
 
-在仓库根目录执行：
+在**本包目录**执行：
 
 ```bash
 npm test
 npm run check
 node scripts/install-anchors.js
 python scripts/run-evals.py
-npm run release -- 1.2.0
+npm run release -- 1.2.1
+# 或先预览：npm run release -- --dry-run --bump patch
 ```
 
 - `npm test`：验证锚点写入、路径刷新和标记替换。
 - `npm run check`：验证三个索引里的文件路径都存在。
-- `node scripts/install-anchors.js`：在本仓库最外层刷新锚点。内容未变时跳过。路径是 `./ai-engineering-specs/AGENTS.md`。
+- `node scripts/install-anchors.js`：在本包根刷新锚点。内容未变时跳过。路径是 `./ai-engineering-specs/AGENTS.md`。
 - `python scripts/run-evals.py`：按 `evals/README.md` 检查 `evals/responses/<用例id>.txt`。没有真实回复时评测失败。
-- `npm run release -- <版本>`：发布准备流程，详见 `scripts/README.md`。结束后在 `main` 上手动执行 `npm publish`（浏览器 2FA），再 `git checkout dev`。
+- `npm run release -- <版本>`：发布准备流程，详见 `scripts/README.md`。结束后仍在伞仓 `main`，在本目录手动 `npm publish`（浏览器 2FA）。
 
 作为 npm 依赖安装时，锚点写到执行安装命令的业务项目根目录，路径指向 `node_modules` 中的总纲。

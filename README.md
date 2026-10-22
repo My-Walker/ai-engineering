@@ -20,4 +20,11 @@
 
 本仓库是体系 **伞仓**（git）；各规范包在子目录内维护版本并手动 `npm publish`。
 
+## 在本仓开发时如何「用」规范
+
+- **改规范**：直接编辑 `03-spec-orchestration/packages/mdd-ai-eng-spec/ai-engineering-specs/`，不要在伞仓根 `npm install @mdd-ai-eng/specs`。
+- **让 Cursor / Kilo 加载规范**：仓库根已放本地锚点（`.cursor/rules/mdd-ai-eng.mdc`、`.kilocoderrules`），指向上述 `AGENTS.md`。请用 Cursor **打开本伞仓根目录** 作为工作区。
+- **业务项目**：仍通过 `npm install @mdd-ai-eng/specs` 消费已发布包。
+- **多规范包本地互依**：等出现第二个包且需要依赖通用包时，再在伞仓根加 npm workspaces（当前单包不必）。
+
 原则：**分工独立、运行组合。**

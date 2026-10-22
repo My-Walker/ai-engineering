@@ -1,0 +1,7 @@
+<!-- mdd-ai-eng:start -->
+# mdd-ai-eng 激活锚点
+
+会话开始或接到任何任务时，必须先用读取工具完整加载 `./03-spec-orchestration/packages/mdd-ai-eng-spec/ai-engineering-specs/AGENTS.md`。该文件是最高行动准则。禁止用本锚点代替该文件。
+
+说明：伞仓开发态直接引用本地规范源码，不要在本仓库根目录 `npm install @mdd-ai-eng/specs`。
+<!-- mdd-ai-eng:end -->

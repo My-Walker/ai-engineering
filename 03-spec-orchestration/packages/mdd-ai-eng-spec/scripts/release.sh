@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 准备 npm 发布（R1）：升版本 → 检查 → 推 dev → 合 main → 打 tag。
+# 准备 npm 发布（伞仓单 main）：升版本 → 检查 → 推 main → 打 tag。
 # 不执行 npm publish；结束后停在 main，打印手动发布命令。
 set -euo pipefail
 
@@ -7,16 +7,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACKAGE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PACKAGE_ROOT"
 
+GIT_ROOT="$(git rev-parse --show-toplevel)"
+PACKAGE_REL="$(git rev-parse --show-prefix)"
+PACKAGE_REL="${PACKAGE_REL%/}"
+
 DRY_RUN=0
 BUMP=""
 VERSION_ARG=""
 
 usage() {
   cat <<'EOF'
-用法（在仓库根目录，且当前分支为 dev）：
+用法（在本包目录执行，且伞仓当前分支为 main）：
 
   bash scripts/release.sh <版本号>
-      # 手动指定完整版本，例如 1.2.0（推荐）
+      # 手动指定完整版本，例如 1.2.1（推荐）
 
   bash scripts/release.sh --bump patch|minor|major
       # 相对当前 package.json 自动 +1：
@@ -30,6 +34,7 @@ usage() {
 
 版本号每次用参数传入，不必改本脚本。
 定版本须二选一：显式版本 或 --bump；--dry-run 可与其一组合。
+Git tag 使用 specs-vX.Y.Z（避免多规范包共用 vX.Y.Z 冲突）。
 脚本不会执行 npm publish。
 EOF
 }
@@ -95,6 +100,8 @@ run() {
 
 CURRENT_VERSION="$(node -p "require('./package.json').version")"
 echo "[信息] 当前 package.json 版本: $CURRENT_VERSION"
+echo "[信息] 包目录: $PACKAGE_ROOT"
+echo "[信息] 伞仓根: $GIT_ROOT"
 
 if [[ -n "$BUMP" ]]; then
   NEW_VERSION="$(node -e "
@@ -119,15 +126,16 @@ if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
   exit 1
 fi
 
-TAG="v${NEW_VERSION}"
+# 伞仓多包时避免与其它包的 vX.Y.Z 冲突
+TAG="specs-v${NEW_VERSION}"
 echo "[信息] 目标版本: $NEW_VERSION（tag: $TAG）"
 
 BRANCH="$(git branch --show-current)"
-if [[ "$BRANCH" != "dev" ]]; then
+if [[ "$BRANCH" != "main" ]]; then
   if [[ "$DRY_RUN" -eq 1 ]]; then
-    echo "[dry-run][警告] 正式执行须在 dev（当前: $BRANCH）"
+    echo "[dry-run][警告] 正式执行须在 main（当前: $BRANCH）"
   else
-    echo "[错误] 请在 dev 分支执行（当前: $BRANCH）" >&2
+    echo "[错误] 请在伞仓 main 分支执行（当前: $BRANCH）" >&2
     exit 1
   fi
 fi
@@ -154,20 +162,25 @@ if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; t
   exit 1
 fi
 
+PKG_JSON_REL="package.json"
+if [[ -n "$PACKAGE_REL" ]]; then
+  PKG_JSON_REL="${PACKAGE_REL}/package.json"
+fi
+
 if [[ "$DRY_RUN" -eq 1 ]]; then
   echo "[dry-run] 将写入 package.json version=$NEW_VERSION"
-  echo "[dry-run] git commit -m 'chore: 发布 ${NEW_VERSION}'"
+  echo "[dry-run] git add ${PKG_JSON_REL}"
+  echo "[dry-run] git commit -m 'chore(specs): 发布 ${NEW_VERSION}'"
   echo "[dry-run] npm test && npm run check"
-  echo "[dry-run] git push origin dev"
-  echo "[dry-run] git checkout main && git pull && git merge origin/dev && git push origin main"
+  echo "[dry-run] git push origin main"
   echo "[dry-run] git tag -a $TAG -m '$TAG' && git push origin $TAG"
-  echo "[dry-run] 结束后停在 main（不自动切回 dev）"
+  echo "[dry-run] 结束后停在 main"
   echo
   echo "=== 手动发布（脚本不会执行）==="
+  echo "  cd ${PACKAGE_ROOT}"
   echo "  npm publish"
   echo "发布完成后："
   echo "  npm view @mdd-ai-eng/specs version"
-  echo "  git checkout dev"
   exit 0
 fi
 
@@ -179,20 +192,12 @@ pkg.version = process.argv[1];
 fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + '\n');
 " "$NEW_VERSION"
 
-git add package.json
-git commit -m "chore: 发布 ${NEW_VERSION}"
+git add "$PKG_JSON_REL"
+git commit -m "chore(specs): 发布 ${NEW_VERSION}"
 
 npm test
 npm run check
 
-git push origin HEAD
-
-git checkout main
-git pull origin main
-if ! git merge origin/dev -m "merge: 合并 dev 至 main 以发布 ${NEW_VERSION}"; then
-  echo "[错误] 合并 main 失败，请手动解决冲突后继续" >&2
-  exit 1
-fi
 git push origin main
 
 git tag -a "$TAG" -m "$TAG"
@@ -201,13 +206,14 @@ git push origin "$TAG"
 echo
 echo "=== 准备完成：已停在 main ==="
 echo "包版本: $NEW_VERSION"
-echo "Git tag: $TAG"
+echo "Git tag: $TAG（伞仓 ai-engineering）"
 echo
 echo "请手动发布（浏览器 2FA 按 npm 提示完成即可）："
+echo "  cd ${PACKAGE_ROOT}"
 echo "  npm publish"
 echo
 echo "发布完成后建议："
 echo "  npm view @mdd-ai-eng/specs version"
-echo "  git checkout dev"
 echo
 echo "说明：scoped 包若已是 public，一般无需再加 --access public。"
+echo "勿在伞仓根目录执行 npm publish。"

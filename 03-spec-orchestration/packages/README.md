@@ -16,9 +16,9 @@
 
 ```bash
 cd 03-spec-orchestration/packages/mdd-ai-eng-spec
-npm test && npm run check
-# 修改 version 后
-npm publish --access public
+npm run release -- 1.2.1          # 或 --bump patch；先 --dry-run 可预览
+# 脚本推 main、打 specs-v* tag 后，在本目录：
+npm publish
 ```
 
 ## 约定
