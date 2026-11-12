@@ -152,3 +152,6 @@ vite.config.ts.timestamp-*
 
 # 本地私有运维工具（含 SCS DB 加解密/表结构，不入库，仅本机使用）
 04-tools/packages/scs-local-db-mcp/
+
+# 临时存储
+design-assets/
