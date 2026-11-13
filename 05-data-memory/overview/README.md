@@ -18,8 +18,8 @@
 
 ## 现状
 
-规划阶段。现阶段多借用 IDE / 宿主自带的代码索引与会话能力；自建记忆服务有明确需求再开产品。
+产品包：[`../packages/agent-memory-mcp`](../packages/agent-memory-mcp)（`@mdd-ai-eng/agent-memory-mcp`）。设计定稿见仓库 `design-assets/记忆mcp/记忆机制定稿记录.md`。
 
 ## 详细文档
 
-见同层 [`../docs/`](../docs/)。
+见同层 [`../docs/`](../docs/)（若有）；包内 [`../packages/agent-memory-mcp/README.md`](../packages/agent-memory-mcp/README.md)。
