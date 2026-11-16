@@ -4,7 +4,7 @@
 
 | 路径 | 含义 |
 |------|------|
-| [`00-overview/`](./00-overview/) | 体系级总纲（五层、横切、组合关系、学习顺序） |
+| [`00-overview/`](./00-overview/) | 体系级总纲（五层、横切、组合关系、学习顺序）；跨层选型概念见 [`00-overview/docs/`](./00-overview/docs/) |
 | [`01-model/`](./01-model/) | L1 模型层 |
 | [`02-runtime-app/`](./02-runtime-app/) | L2 能力与应用层（现阶段借用 Cursor） |
 | [`03-spec-orchestration/`](./03-spec-orchestration/) | L3 规范与编排层（可含多个规范包） |
