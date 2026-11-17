@@ -1,0 +1,30 @@
+{
+  "name": "@ai-engineering/discipline",
+  "version": "0.1.0",
+  "aiDisciplineId": "ai-discipline",
+  "description": "AI 规范纪律层第一枪：薄 AGENTS + SOP 组合 + 原子 skills + 少量 skill commands。",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/My-Walker/ai-engineering.git",
+    "directory": "03-spec-orchestration/packages/ai-discipline-spec"
+  },
+  "bin": {
+    "discipline": "./scripts/discipline.js"
+  },
+  "scripts": {
+    "test": "node test/cli.test.js",
+    "validate": "node scripts/discipline.js validate",
+    "sync": "node scripts/discipline.js sync",
+    "install-local": "node scripts/discipline.js install --hosts cursor"
+  },
+  "files": [
+    "README.md",
+    "seed",
+    "templates",
+    "scripts"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

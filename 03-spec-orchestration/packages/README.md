@@ -7,6 +7,7 @@
 | 包目录 | 标识 / npm | 状态 |
 |--------|------------|------|
 | [`mdd-ai-eng-spec/`](./mdd-ai-eng-spec/) | `mdd-ai-eng` / `@mdd-ai-eng/specs` | 已迁入（干净快照，源自旧仓 `My-Walker/mdd-ai-eng-spec` @ `1.2.0` / `c9ca89f`） |
+| [`ai-discipline-spec/`](./ai-discipline-spec/) | `ai-discipline` / `@ai-engineering/discipline` | 规范纪律层第一枪（薄 AGENTS + SOP + skills + commands；CLI validate/sync/install） |
 
 ## 版本与发布
 

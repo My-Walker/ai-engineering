@@ -1,0 +1,13 @@
+commands:
+  - skill: discipline-author
+    title: 纪律资产作者
+  - skill: clarify-grill
+    title: 拷问澄清
+  - skill: add-logs
+    title: 加诊断日志
+  - skill: verify
+    title: 验证结果
+  - skill: code-review
+    title: 双轴代码评审
+  - skill: handoff
+    title: 会话交接
