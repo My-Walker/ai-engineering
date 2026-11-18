@@ -74,7 +74,8 @@ node …/scripts/discipline.js install [--root <dir>] [--hosts cursor,claude,cod
 4. 中途插入：在聊天里用 `/` 触发已登记 command（如 `/add-logs`），只加载对应 skill，做完回到当前 SOP 阶段。
 5. 改纪律资产：用人触发的 `/discipline-author`（或直接改文件），然后 `validate` → `sync`（改 command 声明再 `install`）。
 
-第一枪预挂的 command：`discipline-author`、`clarify-grill`、`add-logs`、`verify`、`code-review`、`handoff`。
+第一枪预挂的 command：`discipline-author`、`clarify-grill`、`add-logs`、`verify`、`code-review`、`handoff`。  
+`/handoff` 默认把交接文档写到系统临时目录，对话只给绝对路径；新会话 `Read` 该路径续跑（不要靠复制整段聊天）。
 
 ## 与旧包
 
