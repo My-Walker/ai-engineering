@@ -41,7 +41,7 @@ function copySeed(hostRoot, { force = false } = {}) {
   const dest = disciplineRoot(hostRoot);
   const actions = [];
   // 默认补缺不覆盖；--force 时同名文件用 seed 整文件覆盖（不删除本地多出来的资产）
-  for (const sub of ["workflows", "skills", "rules"]) {
+  for (const sub of ["workflows", "skills", "rules", "docs"]) {
     actions.push(
       ...copyMissing(path.join(seed, sub), path.join(dest, sub), { overwrite: force })
     );
@@ -86,7 +86,9 @@ function askHosts() {
 
 async function installDiscipline(hostRoot, hosts, { force = false } = {}) {
   if (force) {
-    console.log("警告: --force 将用 seed 覆盖已存在的同名 skill/sop/rule 与 commands/index.yaml（不删除本地多出来的文件）");
+    console.log(
+      "警告: --force 将用 seed 覆盖已存在的同名 skill/sop/rule/docs 与 commands/index.yaml（不删除本地多出来的文件）"
+    );
   }
   const seedActions = copySeed(hostRoot, { force });
   for (const a of seedActions) {

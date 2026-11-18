@@ -41,7 +41,7 @@ description: 固定基点后分标准轴与规格轴评审；只读不修；无�
 
 ### 3. 找 Standards 来源
 
-`CONTRIBUTING` / coding standards / 仓内 AGENTS 或相关 `.ai-discipline` 约定 / 周围代码与测试风格。
+按 AGENTS 分层协议：有则 Read `.ai-discipline/docs/standards.md`，再按索引「何时读」补读命中专题（禁止 Glob `docs/`）。另可对照 `CONTRIBUTING`、周围代码与测试风格。与 gate 冲突时听 gate / AGENTS 总禁令。
 
 ### 4. Standards 轴
 

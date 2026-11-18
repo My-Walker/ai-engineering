@@ -22,9 +22,17 @@ async function testInstallAndValidate() {
   assert.ok(fs.existsSync(path.join(root, "AGENTS.md")));
   assert.ok(fs.existsSync(path.join(root, ".cursor", "rules", "ai-discipline.mdc")));
   assert.ok(fs.existsSync(path.join(root, ".cursor", "commands", "add-logs.md")));
+  assert.ok(fs.existsSync(path.join(root, ".ai-discipline", "docs", "standards.md")));
+  assert.ok(fs.existsSync(path.join(root, ".ai-discipline", "docs", "pitfalls.md")));
+  assert.ok(
+    fs.existsSync(path.join(root, ".ai-discipline", "docs", "standards", "_template.md"))
+  );
   const agents = fs.readFileSync(path.join(root, "AGENTS.md"), "utf8");
   assert.ok(agents.includes("ai-discipline:start"));
   assert.ok(agents.includes("ask-route.md"));
+  assert.ok(agents.includes("docs/standards.md"));
+  assert.ok(agents.includes("缺哪个就跳过哪个"));
+  assert.ok(agents.includes("禁止") && agents.includes("docs/"));
   console.log("ok install+validate");
 }
 

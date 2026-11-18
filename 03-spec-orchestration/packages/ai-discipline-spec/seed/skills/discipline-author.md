@@ -18,8 +18,8 @@ description: 作者态增删改 rule/skill/sop/command；确认后写真源；va
 
 1. **作者态与业务态分离**：业务任务中途发现纪律不足 → 先记下来，另开作者态或等人确认后再改。
 2. **先摘要后写盘**：变更摘要（路径、要点、受影响 steps/inserts/command 数）→ **人明确确认** → 再写。
-3. **只写真源**：`.ai-discipline/{rules|skills|workflows}/{id}.md` 或 `commands/index.yaml`；遵守 schema（`kind`/`id`/文件名一致等）。
-4. **写 rule 须选型**：`role: gate` = 否决型（未满足不得往下/不算完成）；`role: convention` = 合规提醒型短约束（可挂 steps，默认 `always: false`，always 极少）。差别是语义角色，不是强制力。长规范/坑 → docs 知识库，不要硬拆成大量 rule。
+3. **只写真源**：`.ai-discipline/{rules|skills|workflows}/{id}.md`、`commands/index.yaml`，或 `.ai-discipline/docs/**`（知识库）；rule/skill/sop 遵守 schema（`kind`/`id`/文件名一致等）。
+4. **写 rule 须选型**：`role: gate` = 否决型；`role: convention` = 合规提醒型短约束（可挂 steps，默认 `always: false`）。长规范/坑 → `docs/`：总则与索引写入口 `standards.md`/`pitfalls.md`，专题进 `standards/` 或 `pitfalls/` 并登记索引「何时读」；不要硬拆成大量 rule，勿把专题全文堆进入口。
 5. **SOP 只引用**：步骤只 `skill:`/`rule:`，不把大段做法塞进 SOP。
 6. **生成物归 CLI**：不得手改 `workflows/index.md` 或 AGENTS/`CLAUDE` 标记块冒充 sync；**勿**把 role 分类教程写进 AGENTS。
 7. **校验失败停装**：`validate` 失败则修复真源前不要 `install` 刷新薄壳。

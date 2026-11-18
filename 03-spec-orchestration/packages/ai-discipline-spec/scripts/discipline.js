@@ -15,7 +15,7 @@ function printHelp() {
   discipline sync [--root <dir>] [--claude]
   discipline install [--root <dir>] [--hosts cursor,claude,codex] [--force]
 
---force：用 seed 整文件覆盖已存在的同名 workflows/skills/rules 与 commands/index.yaml；
+--force：用 seed 整文件覆盖已存在的同名 workflows/skills/rules/docs 与 commands/index.yaml；
         不删除本地多出来的资产；末尾仍 sync 重写 index 与 AGENTS 标记块。
         会丢掉同名文件的本地修改，先提交或备份。
 

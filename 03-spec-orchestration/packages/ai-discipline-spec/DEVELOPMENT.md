@@ -25,9 +25,9 @@ seed/                        纪律正文种子 → install 补缺到业务仓 .
   skills/                    原子 skill（含 ask-route、discipline-author 等）
   rules/                     gate（否决）与 convention（合规提醒）；always 须 summary
   commands/index.yaml        挂哪些 skill command（≤10，必含 discipline-author）
-  docs/                      （规划）standards/pitfalls 知识库；非 rule，见设计 §4.2.1
+  docs/                      知识库：入口 standards/pitfalls + standards|pitfalls/ 专题与 _template
 templates/
-  agents-generated.md        sync 填充 always summary → 仓根 AGENTS 标记块（不解释 role 分类）
+  agents-generated.md        sync：always summary + 强制加载（含 docs 分层；不解释 role）
 scripts/
   discipline.js              CLI 入口
   validate.js / sync.js / install.js
@@ -44,9 +44,11 @@ evals/                       评测预留（可空）
 | :--- | :--- |
 | `role: gate` | 未满足 → **不得**进入下一步 / **不得**宣称完成（否决型） |
 | `role: convention` | 短合规提醒；可挂 `steps` / 被 skill 点名；**默认 `always: false`**；always 极少 |
-| 长规范 / 坑案例 | **不要**做成 rule → `.ai-discipline/docs/`（协议已定，seed 挂载可后置）；硬条再晋升 gate/convention |
+| 长规范 / 坑案例 | **不要**做成 rule → `.ai-discipline/docs/`：总则/索引进入口，专题进子目录并登记「何时读」；硬条再晋升 gate/convention |
 
-差别是**语义角色**（否决 vs 合规提醒），不是强制力——本层均为软约束。AGENTS **不**写 role 教程。
+差别是**语义角色**（否决 vs 合规提醒），不是强制力——本层均为软约束。AGENTS **不**写 role 教程；docs **分层加载**（入口全读、专题按需）。
+
+改 `seed/docs/**` 或 `templates/agents-generated.md` 后：`npm test`；业务仓要吃到新入口/模板：`install --force`（注意会盖同名 docs）或删对应文件后再 install。
 
 ## 本地命令
 
@@ -87,7 +89,7 @@ Windows 下 seed 多为 CRLF；解析必须经 `parse.js` 归一化，勿再引�
 
 - `validate`：失败 exit ≠ 0；检查 kind/id/name/description、路径=`id`、steps/inserts、command 约束、`ask-route` 存在。
 - `sync`：先 validate；重写 `workflows/index.md`（含 priority）；重写 AGENTS 标记块（总禁令 = always `summary`；强制加载含 ask-route；**无** command 表）。
-- `install`：seed 默认 **补缺不覆盖**；`--force` 时同名 skill/sop/rule 与 `commands/index.yaml` **整文件覆盖**（不删本地多出来的）→ 宿主薄壳覆盖 + 清单外删除 → sync。Cursor command 正文标题下先写 skill `description`（供 `/` 预览），再写执行三步。
+- `install`：seed 默认 **补缺不覆盖**（含 `docs/`）；`--force` 时同名 skill/sop/rule/docs 与 `commands/index.yaml` **整文件覆盖**（不删本地多出来的）→ 宿主薄壳覆盖 + 清单外删除 → sync。Cursor command 正文标题下先写 skill `description`（供 `/` 预览），再写执行三步。
 
 薄壳统一三步：Read `.ai-discipline/skills/{id}.md` → 执行 → 回到当前任务/SOP 阶段。
 
