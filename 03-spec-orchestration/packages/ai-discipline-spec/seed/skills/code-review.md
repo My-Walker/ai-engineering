@@ -8,7 +8,7 @@ description: 固定基点后分标准轴与规格轴评审；只读不修；无�
 # 双轴代码评审
 
 对「某固定点 → HEAD（或用户指定 tip）」的改动做只读评审。  
-本 skill **不修改代码**；落地需用户确认后重路由 `bugfix` / `feature` 等。
+本 skill **不修改代码**；落地需用户确认后重路由 `sop:bugfix` / `sop:feature` 等。
 
 ## 进入条件
 

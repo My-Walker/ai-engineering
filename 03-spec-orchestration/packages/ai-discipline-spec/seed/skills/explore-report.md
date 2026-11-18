@@ -11,16 +11,16 @@ description: 总判 + 按严重度发现与改进顺序；不落实现 Plan；�
 
 ## 进入条件
 
-- `explore-gather` 已完成（或等价证据已齐）。
-- 输出形态已在 `explore-scope` 确认。
+- `skill:explore-gather` 已完成（或等价证据已齐）。
+- 输出形态已在 `skill:explore-scope` 确认。
 
 ## 核心规则
 
 1. **先总判**（1～2 句），再列发现。
 2. **按严重度排序**；尽量指向具体路径或机制。
 3. **可执行改进顺序**（用户只要答疑可省略实现建议）。
-4. **不在本 skill 内改业务代码**；不输出代替 `write-impl-plan` 的实现类 Plan 正文强行开干。
-5. 若要落地：提示结束本 SOP，重路由 `feature` / `bugfix`（必要时先 `ask-route`）。
+4. **不在本 skill 内改业务代码**；不输出代替 `skill:write-impl-plan` 的实现类 Plan 正文强行开干。
+5. 若要落地：提示结束本 SOP，重路由 `sop:feature` / `sop:bugfix`（必要时先 `skill:ask-route`）。
 
 ## 做法
 

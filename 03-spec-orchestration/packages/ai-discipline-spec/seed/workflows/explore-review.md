@@ -18,7 +18,7 @@ inserts:
 
 # 只读分析
 
-默认不修改业务代码。用户要求落地实现时结束本 SOP，重路由 `feature` / `bugfix`（必要时先 `ask-route`）。
+默认不修改业务代码。用户要求落地实现时结束本 SOP，重路由 `sop:feature` / `sop:bugfix`（必要时先 `skill:ask-route`）。
 
 ## 完成定义
 

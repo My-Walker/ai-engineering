@@ -31,7 +31,7 @@ description: 澄清门放行后写出可确认计划字段；未确认前不写�
    - **关键取舍**：已选方案与弃选及理由
    - **验收点**：如何判定完成
    - **风险/回滚**：若相关
-3. 等人确认或修订；确认后交回 SOP（`tdd` / `implement-change` / `apply-fix` 等）。
+3. 等人确认或修订；确认后交回 SOP（`skill:tdd` / `skill:implement-change` / `skill:apply-fix` 等）。
 
 ## 完成标准
 

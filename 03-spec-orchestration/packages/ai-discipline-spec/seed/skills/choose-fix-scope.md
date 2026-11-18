@@ -11,7 +11,7 @@ description: 原因与证据齐备后请用户选最小或长期维护修复；�
 
 ## 进入条件
 
-- `diagnose-bug` 已给出**已确认原因 + 证据**（或等价回传证据已分析完毕）。
+- `skill:diagnose-bug` 已给出**已确认原因 + 证据**（或等价回传证据已分析完毕）。
 - 尚未开始按猜想改修复代码。
 
 ## 核心规则
@@ -26,11 +26,11 @@ description: 原因与证据齐备后请用户选最小或长期维护修复；�
 1. 用三五行重申原因与证据指针。
 2. 给出方案对比（改动面、风险、回归价值）+ 推荐。
 3. 等待用户明确选定。
-4. 若选长期且改动面大：交 SOP optional `write-impl-plan`；否则进入 `tdd?` / `apply-fix`。
+4. 若选长期且改动面大：交 SOP optional `skill:write-impl-plan`；否则进入 optional `skill:tdd` / `skill:apply-fix`。
 
 ## 完成标准
 
-- 用户已选定范围（或等价书面确认）；选定记录可被后续 `apply-fix` 引用。
+- 用户已选定范围（或等价书面确认）；选定记录可被后续 `skill:apply-fix` 引用。
 - 选定前无修复写码。
 
 ## 禁止

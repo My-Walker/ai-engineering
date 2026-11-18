@@ -2,10 +2,10 @@
 kind: rule
 id: route-gate
 name: 路由门
-description: 无匹配 SOP 须走 ask-route；禁止无路径乱改业务代码
+description: 无匹配 SOP 须走 skill:ask-route；禁止无路径乱改业务代码
 role: gate
 always: true
-summary: 无匹配 SOP 须走 ask-route；禁止无路径直接改业务代码
+summary: 无匹配 SOP 须走 skill:ask-route；禁止无路径直接改业务代码
 ---
 
 # 路由门

@@ -12,7 +12,7 @@ description: 一轮尽量问清当前可答决策；选项+推荐；未决影响
 
 ## 进入条件
 
-- SOP 步骤调用（如 `bugfix` optional、`feature` 必经），或用户要求澄清/对齐方案。
+- SOP 步骤调用（如 `sop:bugfix` optional、`sop:feature` 必经），或用户要求澄清/对齐方案。
 - 已能复述任务目标；否则先用一句话确认目标再拷问。
 
 ## 核心规则

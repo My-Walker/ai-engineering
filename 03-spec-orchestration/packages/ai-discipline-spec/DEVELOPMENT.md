@@ -64,7 +64,7 @@ node "…/scripts/discipline.js" install --root "D:/path/to/sandbox" --hosts cur
 
 | 改动 | 建议动作 |
 | :--- | :--- |
-| `seed/**` 正文 | `npm test`；**install 不覆盖**已有 skill/sop/rule。已装业务仓要吃到加厚正文：删对应 `.ai-discipline/skills/{id}.md`（或整目录 skills）后再 `install`，或手工把 seed 文件拷过去；也可用全新沙箱 |
+| `seed/**` 正文 | `npm test`；**install 不覆盖**已有 skill/sop/rule。已装业务仓要吃到加厚正文：删对应 `.ai-discipline/skills/{id}.md`（或整目录 skills）后再 `install`，或手工把 seed 文件拷过去；也可用全新沙箱。正文里跨资产跳转须写 `skill:`/`rule:`/`sop:` + id（勿裸 id） |
 | `templates/agents-generated.md` | 沙箱 `sync` / `install`，看 `AGENTS.md` 标记块 |
 | `scripts/lib/hosts.js` 薄壳 | 沙箱 `install`（薄壳按清单**覆盖**） |
 | `scripts/lib/parse.js` / validate | `npm test`；故意坏引用应失败 |
