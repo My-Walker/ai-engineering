@@ -12,7 +12,7 @@
 
 | 路径 | 作用 | 再装是否覆盖 |
 | :--- | :--- | :--- |
-| `.ai-discipline/workflows\|skills\|rules/*.md` | 纪律真源 | 默认**不覆盖**只补缺；`install --force` 时同名整文件覆盖（不删本地多出来的） |
+| `.ai-discipline/workflows\|skills\|rules/*.md` | 纪律真源（rules：`gate` 否决 / `convention` 合规提醒；长规范与坑见设计中的 docs 约定） | 默认**不覆盖**只补缺；`install --force` 时同名整文件覆盖（不删本地多出来的） |
 | `.ai-discipline/commands/index.yaml` | 挂哪些 skill command | 默认已存在则不覆盖；`--force` 时覆盖 |
 | `.ai-discipline/workflows/index.md` | SOP 路由索引 | `sync` / `install` 末尾可重写 |
 | 仓根 `AGENTS.md`（`<!-- ai-discipline:… -->`） | 薄常驻：总禁令 + 强制加载 | 只改标记块内 |

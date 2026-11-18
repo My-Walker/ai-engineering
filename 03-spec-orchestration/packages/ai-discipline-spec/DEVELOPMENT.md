@@ -23,10 +23,11 @@ DEVELOPMENT.md               本文件（不发布）
 seed/                        纪律正文种子 → install 补缺到业务仓 .ai-discipline/
   workflows/                 SOP（bugfix / feature / explore-review）
   skills/                    原子 skill（含 ask-route、discipline-author 等）
-  rules/                     门禁 / 约定（always 带 summary）
+  rules/                     gate（否决）与 convention（合规提醒）；always 须 summary
   commands/index.yaml        挂哪些 skill command（≤10，必含 discipline-author）
+  docs/                      （规划）standards/pitfalls 知识库；非 rule，见设计 §4.2.1
 templates/
-  agents-generated.md        sync 填充 always summary → 仓根 AGENTS 标记块
+  agents-generated.md        sync 填充 always summary → 仓根 AGENTS 标记块（不解释 role 分类）
 scripts/
   discipline.js              CLI 入口
   validate.js / sync.js / install.js
@@ -36,6 +37,16 @@ scripts/
 test/cli.test.js             临时目录单测
 evals/                       评测预留（可空）
 ```
+
+## 写 rule：gate vs convention
+
+| 选型 | 用当 |
+| :--- | :--- |
+| `role: gate` | 未满足 → **不得**进入下一步 / **不得**宣称完成（否决型） |
+| `role: convention` | 短合规提醒；可挂 `steps` / 被 skill 点名；**默认 `always: false`**；always 极少 |
+| 长规范 / 坑案例 | **不要**做成 rule → `.ai-discipline/docs/`（协议已定，seed 挂载可后置）；硬条再晋升 gate/convention |
+
+差别是**语义角色**（否决 vs 合规提醒），不是强制力——本层均为软约束。AGENTS **不**写 role 教程。
 
 ## 本地命令
 
