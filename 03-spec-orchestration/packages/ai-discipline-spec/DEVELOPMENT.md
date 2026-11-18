@@ -64,7 +64,7 @@ node "…/scripts/discipline.js" install --root "D:/path/to/sandbox" --hosts cur
 
 | 改动 | 建议动作 |
 | :--- | :--- |
-| `seed/**` 正文 | `npm test`；**install 不覆盖**已有 skill/sop/rule。已装业务仓要吃到加厚正文：删对应 `.ai-discipline/skills/{id}.md`（或整目录 skills）后再 `install`，或手工把 seed 文件拷过去；也可用全新沙箱。正文里跨资产跳转须写 `skill:`/`rule:`/`sop:` + id（勿裸 id） |
+| `seed/**` 正文 | `npm test`。默认 **install 不覆盖**已有 skill/sop/rule；业务仓跟上游：`install --force`（同名整文件覆盖，不 prune 多余文件），或删对应文件后再 install / 手工拷 / 新沙箱。正文跨资产跳转须写 `skill:`/`rule:`/`sop:` + id（勿裸 id） |
 | `templates/agents-generated.md` | 沙箱 `sync` / `install`，看 `AGENTS.md` 标记块 |
 | `scripts/lib/hosts.js` 薄壳 | 沙箱 `install`（薄壳按清单**覆盖**） |
 | `scripts/lib/parse.js` / validate | `npm test`；故意坏引用应失败 |
@@ -76,7 +76,7 @@ Windows 下 seed 多为 CRLF；解析必须经 `parse.js` 归一化，勿再引�
 
 - `validate`：失败 exit ≠ 0；检查 kind/id/name/description、路径=`id`、steps/inserts、command 约束、`ask-route` 存在。
 - `sync`：先 validate；重写 `workflows/index.md`（含 priority）；重写 AGENTS 标记块（总禁令 = always `summary`；强制加载含 ask-route；**无** command 表）。
-- `install`：seed **补缺不覆盖** → 宿主薄壳覆盖 + 清单外删除 → sync。Cursor command 正文标题下先写 skill `description`（供 `/` 预览），再写执行三步。
+- `install`：seed 默认 **补缺不覆盖**；`--force` 时同名 skill/sop/rule 与 `commands/index.yaml` **整文件覆盖**（不删本地多出来的）→ 宿主薄壳覆盖 + 清单外删除 → sync。Cursor command 正文标题下先写 skill `description`（供 `/` 预览），再写执行三步。
 
 薄壳统一三步：Read `.ai-discipline/skills/{id}.md` → 执行 → 回到当前任务/SOP 阶段。
 
@@ -86,7 +86,7 @@ Windows 下 seed 多为 CRLF；解析必须经 `parse.js` 归一化，勿再引�
 2. 模糊意图 → `ask-route`，选定前不改代码
 3. 缺陷无证据 → evidence-gate；可走向 `/add-logs`
 4. `/add-logs` 等人触发 command 只加载对应 skill；`/` 预览应先见用途句而非套话
-5. 再次 install 不覆盖用户已改 skill；可刷新 command 薄壳与 sync 生成物
+5. 再次 install 不覆盖用户已改 skill；可刷新 command 薄壳与 sync 生成物；`install --force` 应恢复 seed 同名正文且保留本地多余文件
 
 ## 非本包范围（第一枪）
 

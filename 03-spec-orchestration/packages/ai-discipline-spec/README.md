@@ -12,8 +12,8 @@
 
 | 路径 | 作用 | 再装是否覆盖 |
 | :--- | :--- | :--- |
-| `.ai-discipline/workflows\|skills\|rules/*.md` | 纪律真源 | **不覆盖**已有，只补缺 |
-| `.ai-discipline/commands/index.yaml` | 挂哪些 skill command | 已存在则不覆盖 |
+| `.ai-discipline/workflows\|skills\|rules/*.md` | 纪律真源 | 默认**不覆盖**只补缺；`install --force` 时同名整文件覆盖（不删本地多出来的） |
+| `.ai-discipline/commands/index.yaml` | 挂哪些 skill command | 默认已存在则不覆盖；`--force` 时覆盖 |
 | `.ai-discipline/workflows/index.md` | SOP 路由索引 | `sync` / `install` 末尾可重写 |
 | 仓根 `AGENTS.md`（`<!-- ai-discipline:… -->`） | 薄常驻：总禁令 + 强制加载 | 只改标记块内 |
 | 所选宿主薄壳 | Cursor / Claude / Codex 的 command 入口 | **按清单覆盖**；清单外旧壳删除 |
@@ -39,7 +39,14 @@ node "E:/work/project/git/ai-engineering/03-spec-orchestration/packages/ai-disci
 node "E:/work/project/git/ai-engineering/03-spec-orchestration/packages/ai-discipline-spec/scripts/discipline.js" install --root "D:/path/to/your-app" --hosts cursor
 ```
 
+跟上游 seed 对齐（会丢掉同名真源的本地修改，先提交或备份）：
+
+```bash
+node "…/scripts/discipline.js" install --root "D:/path/to/your-app" --hosts cursor --force
+```
+
 - `--hosts`：`cursor` / `claude` / `codex`，逗号多选。未传且在 TTY 下会交互多选。
+- `--force`：用 seed **整文件覆盖**已存在的同名 `workflows`/`skills`/`rules` 与 `commands/index.yaml`；**不删除**本地多出来的资产；末尾仍 `sync`（按当前磁盘重写 index 与 AGENTS 标记块）。
 - 装完用 Cursor **打开该项目根**做会话验收；不要打开本包目录当业务仓。
 
 ### 各宿主会多写什么
@@ -62,7 +69,7 @@ node …/scripts/discipline.js install [--root <dir>] [--hosts cursor,claude,cod
 | :--- | :--- |
 | `validate` | 校验 schema、路径=`id`、steps/inserts 引用、command ≤10 且含 `discipline-author` |
 | `sync` | 先 validate；重写 `workflows/index.md` 与 AGENTS 标记块（及已有/指定的 `CLAUDE.md`） |
-| `install` | 补缺 seed → 写宿主薄壳 → sync |
+| `install` | 补缺 seed（可选 `--force` 同名覆盖）→ 写宿主薄壳 → sync |
 
 改了 skill/SOP/rule 正文后一般只需 `validate` + `sync`。改了 `commands/index.yaml` 或要刷新薄壳说明时再 `install`。
 

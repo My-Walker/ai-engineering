@@ -36,21 +36,21 @@ function copyMissing(srcDir, destDir, { overwrite = false } = {}) {
   return actions;
 }
 
-function copySeed(hostRoot) {
+function copySeed(hostRoot, { force = false } = {}) {
   const seed = seedRoot();
   const dest = disciplineRoot(hostRoot);
   const actions = [];
-  // workflows / skills / rules: never overwrite
+  // 默认补缺不覆盖；--force 时同名文件用 seed 整文件覆盖（不删除本地多出来的资产）
   for (const sub of ["workflows", "skills", "rules"]) {
     actions.push(
-      ...copyMissing(path.join(seed, sub), path.join(dest, sub), { overwrite: false })
+      ...copyMissing(path.join(seed, sub), path.join(dest, sub), { overwrite: force })
     );
   }
-  // commands/index.yaml: do not overwrite if exists
+  // commands/index.yaml：同策略
   const cmdSrc = path.join(seed, "commands", "index.yaml");
   const cmdDest = path.join(dest, "commands", "index.yaml");
   if (fs.existsSync(cmdSrc)) {
-    if (fs.existsSync(cmdDest)) {
+    if (!force && fs.existsSync(cmdDest)) {
       actions.push({ action: "skip", filePath: cmdDest });
     } else {
       actions.push(writeIfChanged(cmdDest, fs.readFileSync(cmdSrc, "utf8")));
@@ -84,8 +84,11 @@ function askHosts() {
   });
 }
 
-async function installDiscipline(hostRoot, hosts) {
-  const seedActions = copySeed(hostRoot);
+async function installDiscipline(hostRoot, hosts, { force = false } = {}) {
+  if (force) {
+    console.log("警告: --force 将用 seed 覆盖已存在的同名 skill/sop/rule 与 commands/index.yaml（不删除本地多出来的文件）");
+  }
+  const seedActions = copySeed(hostRoot, { force });
   for (const a of seedActions) {
     const label = { skip: "跳过", update: "更新", write: "写入", delete: "删除" }[a.action];
     console.log(`[seed ${label}] ${a.filePath}`);
@@ -109,6 +112,8 @@ async function runInstall(argv = process.argv.slice(2)) {
     return findHostRoot();
   })();
 
+  const force = argv.includes("--force");
+
   let hosts = parseHostsArg(argv);
   if (!hosts || hosts.length === 0) {
     if (!process.stdin.isTTY) {
@@ -128,7 +133,8 @@ async function runInstall(argv = process.argv.slice(2)) {
 
   console.log(`安装根目录: ${hostRoot}`);
   console.log(`宿主: ${hosts.join(", ")}`);
-  const out = await installDiscipline(hostRoot, hosts);
+  if (force) console.log("模式: --force（同名覆盖）");
+  const out = await installDiscipline(hostRoot, hosts, { force });
   if (out.syncResult && !out.syncResult.ok) {
     process.exitCode = 1;
   }

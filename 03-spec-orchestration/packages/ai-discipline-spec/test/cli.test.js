@@ -86,12 +86,64 @@ async function testCommandShellOverwrite() {
   console.log("ok command-shell overwrite");
 }
 
+async function testForceOverwriteKeepsExtras() {
+  const root = mktemp();
+  await installDiscipline(root, ["cursor"]);
+  const skill = path.join(root, ".ai-discipline", "skills", "verify.md");
+  const cmdYaml = path.join(root, ".ai-discipline", "commands", "index.yaml");
+  const extraSkill = path.join(root, ".ai-discipline", "skills", "local-only.md");
+  const extraRule = path.join(
+    root,
+    ".ai-discipline",
+    "rules",
+    "local-always.md"
+  );
+  fs.writeFileSync(skill, "USER_EDIT\n", "utf8");
+  fs.writeFileSync(cmdYaml, "commands: []\n", "utf8");
+  fs.writeFileSync(
+    extraSkill,
+    "---\nkind: skill\nid: local-only\nname: 本地\ndescription: 仅本地\n---\n\n# 本地\n",
+    "utf8"
+  );
+  fs.writeFileSync(
+    extraRule,
+    [
+      "---",
+      "kind: rule",
+      "id: local-always",
+      "name: 本地常驻",
+      "description: 本地多出来的 always",
+      "role: gate",
+      "always: true",
+      "summary: 本地多出来的门禁摘要",
+      "---",
+      "",
+      "# 本地常驻",
+      "",
+    ].join("\n"),
+    "utf8"
+  );
+
+  const forced = await installDiscipline(root, ["cursor"], { force: true });
+  assert.ok(forced.syncResult && forced.syncResult.ok, "force 后 sync 应成功");
+  const restored = fs.readFileSync(skill, "utf8");
+  assert.ok(!restored.includes("USER_EDIT"));
+  assert.ok(restored.includes("kind: skill"));
+  assert.ok(fs.readFileSync(cmdYaml, "utf8").includes("discipline-author"));
+  assert.ok(fs.existsSync(extraSkill), "本地多出来的 skill 不应被删");
+  assert.ok(fs.existsSync(extraRule), "本地多出来的 rule 不应被删");
+  const agents = fs.readFileSync(path.join(root, "AGENTS.md"), "utf8");
+  assert.ok(agents.includes("本地多出来的门禁摘要"), "多余 always 仍应进入 AGENTS");
+  console.log("ok force overwrite keeps extras");
+}
+
 async function main() {
   await testInstallAndValidate();
   await testNoOverwriteSkill();
   await testBrokenRefFails();
   await testSyncRewritesIndex();
   await testCommandShellOverwrite();
+  await testForceOverwriteKeepsExtras();
   console.log("all tests passed");
 }
 
