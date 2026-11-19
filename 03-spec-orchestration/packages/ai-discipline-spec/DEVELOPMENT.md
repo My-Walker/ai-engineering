@@ -11,7 +11,7 @@ ai-engineering/03-spec-orchestration/packages/ai-discipline-spec/
 ```
 
 - 伞仓 git 在 `ai-engineering` 根提交；**不要**在本包目录误跑 `install` 把真源写进包树。
-- npm 名：`@ai-engineering/discipline`；CLI bin：`discipline`。第一枪以源码联调为主，publish 流程未定前勿随意发版。
+- npm 名：`@ai-engineering/discipline`；CLI bin：`discipline`；license：`MIT`。
 - **不要**动 `mdd-ai-eng-spec`。
 
 ## 目录
@@ -20,6 +20,7 @@ ai-engineering/03-spec-orchestration/packages/ai-discipline-spec/
 package.json                 包名、bin、files、scripts
 README.md                    安装用户说明（会随 files 发布）
 DEVELOPMENT.md               本文件（不发布）
+.npmrc                       钉官方源 + @ai-engineering scope
 seed/                        纪律正文种子 → install 补缺到业务仓 .ai-discipline/
   workflows/                 SOP（bugfix / feature / explore-review）
   skills/                    做法积木（原子 skill；含 ask-route、discipline-author 等）
@@ -31,6 +32,7 @@ templates/
 scripts/
   discipline.js              CLI 入口
   validate.js / sync.js / install.js
+  release.sh                 发版准备（不随业务用法；不执行 npm publish）
   lib/parse.js               frontmatter（已归一化 CRLF）
   lib/hosts.js               各宿主薄壳与 Cursor mdc
   lib/fs-util.js             标记块、writeIfChanged、路径
@@ -90,7 +92,9 @@ npm run sync
 npm run install-local     # = install --hosts cursor，目标是 cwd，慎用
 ```
 
-联调 / 验收请装到**空沙箱或业务仓**，用脚本绝对路径 + 对方 cwd，或 `--root`：
+## 源码联调（伞仓绝对路径）
+
+未发版、或要验证未发布的本地改动时：装到**空沙箱或业务仓**，用脚本绝对路径 + 对方 cwd，或 `--root`（不要在本包目录里装）：
 
 ```bash
 # 示例：当前目录是沙箱根
@@ -101,6 +105,33 @@ node "…/scripts/discipline.js" install --root "D:/path/to/sandbox" --hosts cur
 ```
 
 误装进本包时删除：`.ai-discipline/`、`.cursor/`、`AGENTS.md`（以及若有的 `CLAUDE.md`、`.claude/`、`.agents/`）。
+
+## 发版
+
+对齐 `@mdd-ai-eng/specs`：在本包目录、伞仓 **`main`**、工作区干净时执行发布准备；脚本**不**执行 `npm publish`（留给你处理浏览器 2FA）。
+
+```bash
+# 指定版本（推荐）
+npm run release -- 0.1.1
+
+# 或相对当前 package.json 自动 +1
+npm run release -- --bump patch
+
+# 只预览步骤
+npm run release -- --dry-run 0.1.1
+```
+
+流程：升版本并提交 → `npm test` → 推 `main` → 打 `discipline-vX.Y.Z` tag → 打印手动发布命令。然后：
+
+```bash
+cd 03-spec-orchestration/packages/ai-discipline-spec
+npm publish
+npm view @ai-engineering/discipline version
+```
+
+- Tag 前缀用 `discipline-v*`，避免与 `specs-v*` 等其它规范包冲突。
+- 勿在伞仓根目录 `npm publish`。
+- scoped 包已设 `publishConfig.access=public`；若 npm 仍提示，按提示补 `--access public`。
 
 ## 改什么、怎么验
 
@@ -130,6 +161,6 @@ Windows 下 seed 多为 CRLF；解析必须经 `parse.js` 归一化，勿再引�
 4. `/add-logs` 等人触发 command 只加载对应 skill；`/` 预览应先见用途句而非套话
 5. 再次 install 不覆盖用户已改 skill；可刷新 command 薄壳与 sync 生成物；`install --force` 应恢复 seed 同名正文且保留本地多余文件
 
-## 非本包范围（第一枪）
+## 非本包范围（当前）
 
-npm publish 流程、与 mdd 迁移/卸载、用户级路径、长 SOP 状态文件、Codex 字段深度兼容矩阵、完整 evals 题集。
+与 mdd 迁移/卸载、用户级路径、长 SOP 状态文件、Codex 字段深度兼容矩阵、完整 evals 题集。

@@ -1,6 +1,6 @@
 # @ai-engineering/discipline
 
-标识：`ai-discipline`。L3 **规范纪律层**第一枪实现包。
+标识：`ai-discipline`。L3 **规范纪律层**实现包。
 
 用薄常驻 + SOP 组合 + 原子 skill，约束 Agent 怎么干活；高频动作用人触发的 skill **command** 插入。设计定稿见伞仓 [`规范纪律层 · 设计理念.md`](../../docs/规范纪律层%20·%20设计理念.md)。
 
@@ -22,28 +22,33 @@
 
 这些文件应**提交进业务仓**，团队共享同一套纪律。
 
-## 安装（开发态 / 本地脚本）
+## 安装
 
-当前以伞仓源码联调为主（尚未走 npm publish 发版流程时）：
-
-1. 先进入**业务仓根或空沙箱目录**（不要在本包目录里装）。
-2. 用脚本绝对路径执行 `install`：
+1. 进入**业务仓根或空沙箱目录**（不要在本包目录里装）。
+2. 安装并执行 `install`：
 
 ```bash
 # 当前目录 = 要安装的项目根
-node "E:/work/project/git/ai-engineering/03-spec-orchestration/packages/ai-discipline-spec/scripts/discipline.js" install --hosts cursor
+npm install -D @ai-engineering/discipline
+npx discipline install --hosts cursor
 ```
 
-或在任意目录用 `--root`：
+或一次性：
 
 ```bash
-node "E:/work/project/git/ai-engineering/03-spec-orchestration/packages/ai-discipline-spec/scripts/discipline.js" install --root "D:/path/to/your-app" --hosts cursor
+npx --yes @ai-engineering/discipline install --hosts cursor
+```
+
+任意目录指定目标根：
+
+```bash
+npx discipline install --root "D:/path/to/your-app" --hosts cursor
 ```
 
 跟上游 seed 对齐（会丢掉同名真源的本地修改，先提交或备份）：
 
 ```bash
-node "…/scripts/discipline.js" install --root "D:/path/to/your-app" --hosts cursor --force
+npx discipline install --root "D:/path/to/your-app" --hosts cursor --force
 ```
 
 - `--hosts`：`cursor` / `claude` / `codex`，逗号多选。未传且在 TTY 下会交互多选。
@@ -62,9 +67,9 @@ node "…/scripts/discipline.js" install --root "D:/path/to/your-app" --hosts cu
 ## CLI
 
 ```bash
-node …/scripts/discipline.js validate [--root <dir>]
-node …/scripts/discipline.js sync [--root <dir>] [--claude]
-node …/scripts/discipline.js install [--root <dir>] [--hosts cursor,claude,codex]
+npx discipline validate [--root <dir>]
+npx discipline sync [--root <dir>] [--claude]
+npx discipline install [--root <dir>] [--hosts cursor,claude,codex]
 ```
 
 | 命令 | 作用 |
@@ -83,7 +88,7 @@ node …/scripts/discipline.js install [--root <dir>] [--hosts cursor,claude,cod
 4. 中途插入：在聊天里用 `/` 触发已登记 command（如 `/add-logs`），只加载对应 skill，做完回到当前 SOP 阶段。
 5. 改纪律资产：用人触发的 `/discipline-author`（或直接改文件），然后 `validate` → `sync`（改 command 声明再 `install`）。
 
-第一枪预挂的 command：`discipline-author`、`clarify-grill`、`add-logs`、`verify`、`code-review`、`handoff`。  
+预挂的 command：`discipline-author`、`clarify-grill`、`add-logs`、`verify`、`code-review`、`handoff`。  
 `/handoff` 默认把交接文档写到系统临时目录，对话只给绝对路径；新会话 `Read` 该路径续跑（不要靠复制整段聊天）。
 
 ## 与旧包
