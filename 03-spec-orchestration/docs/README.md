@@ -12,4 +12,4 @@
 
 | 文档 | 回答什么 |
 | :--- | :--- |
-| [`规范纪律层 · 设计理念`](./规范纪律层%20·%20设计理念.md) | 完整定稿：零件/schema/AGENTS/command/sync；含 optional·when、ask-route、软拦说明 |
+| [`规范纪律层 · 设计理念`](./规范纪律层%20·%20设计理念.md) | 完整定稿：零件/schema/AGENTS/command/sync；含 when·confirm、ask-route、软拦说明 |

@@ -9,10 +9,10 @@ steps:
   - use: skill:clarify-grill
   - use: rule:clarify-gate
   - use: skill:write-impl-plan
-    optional: true
     when: 改动面大或存在多种实现路径
+    confirm: true
   - use: skill:tdd
-    optional: true
+    confirm: true
   - use: skill:implement-change
   - use: skill:verify
 inserts:
@@ -24,7 +24,7 @@ inserts:
 
 # 功能开发
 
-任务类型须已明确是新增能力或新模块。严格按 `steps` 执行。
+任务类型须已明确是新增能力或新模块。严格按 `steps` 执行；遵守 step 修饰链语义（见 AGENTS）。
 
 ## 完成定义
 

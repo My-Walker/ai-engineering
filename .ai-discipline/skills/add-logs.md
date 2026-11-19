@@ -7,7 +7,8 @@ description: 按假设加可区分探针并等人回传；未回传前不改修�
 
 # 加诊断日志
 
-人工辅助取证。用于 `skill:diagnose-bug` 证据不足、或 SOP `when: 证据不足需人工取证`。服从 `rule:evidence-gate`。
+人工辅助取证。用于 `skill:diagnose-bug` 证据不足、需人工回传信号时。服从 `rule:evidence-gate`。  
+是否调用本积木由 SOP/调用方决定；本 skill 只规定**怎么加探针、怎么等人回传**。
 
 ## 进入条件
 

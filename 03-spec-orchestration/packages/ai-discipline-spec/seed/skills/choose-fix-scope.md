@@ -26,7 +26,7 @@ description: 原因与证据齐备后请用户选最小或长期维护修复；�
 1. 用三五行重申原因与证据指针。
 2. 给出方案对比（改动面、风险、回归价值）+ 推荐。
 3. 等待用户明确选定。
-4. 若选长期且改动面大：交 SOP optional `skill:write-impl-plan`；否则进入 optional `skill:tdd` / `skill:apply-fix`。
+4. 选定后交回调用方 / SOP 后续步骤（本 skill 不编排下一步是否出计划或是否 TDD）。
 
 ## 完成标准
 

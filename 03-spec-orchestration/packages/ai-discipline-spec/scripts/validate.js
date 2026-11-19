@@ -101,6 +101,15 @@ function validateDiscipline(rootDir) {
       if (!byKind[parsed.kind].has(parsed.id)) {
         errors.push(`${file}: 引用不存在 ${use}`);
       }
+      if (
+        typeof step === "object" &&
+        step !== null &&
+        step.confirm !== undefined &&
+        step.confirm !== true &&
+        step.confirm !== false
+      ) {
+        errors.push(`${file}: steps.confirm 须为布尔（${use}）`);
+      }
     }
     for (const ins of doc.data.inserts || []) {
       const ref = typeof ins === "string" ? ins : ins.use;

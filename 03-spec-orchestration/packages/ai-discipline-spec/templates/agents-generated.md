@@ -10,7 +10,7 @@
 ## 强制加载
 
 1. 完整 Read `.ai-discipline/workflows/index.md`，按 `triggers` 匹配；多命中先比 `priority`，并列则转步骤 3。
-2. **命中**后完整 Read 该 SOP；再按 `steps` 顺序处理：遵守 `optional`/`when` 语义；`skill:`/`rule:` 按 `.ai-discipline/skills/{id}.md` 或 `rules/{id}.md` **直读**（禁止 Glob）；主路径不自行调用 skill command。
+2. **命中**后完整 Read 该 SOP；再按 `steps` 数组顺序处理。每步：`use` 以外字段为**修饰链**，按固定算子顺序 `when`（若有）→ `confirm`（若有）→ 是否执行 `use`（与 YAML 键序无关）；链的最终结果决定是否 `use`；链未决不得写码。算子：`when` 只写入判断/推荐，**不因假而短路后续 confirm**；`confirm: true` 到站 HITL（选项+推荐，有 when 则推荐跟判断），人选为最终是否 `use`；仅 `when` 无 confirm 时判断结果直接硬闸 `use`；二者皆无则必须 `use`。`skill:`/`rule:` 按 `.ai-discipline/skills/{id}.md` 或 `rules/{id}.md` **直读**（禁止 Glob）；主路径不自行调用 skill command。
 3. **零命中 / 多命中难决 / 混合意图**：完整 Read `.ai-discipline/skills/ask-route.md`，按其执行（选项+推荐，等人选定）；选定前不改业务代码。
 4. **项目知识库（分层）**：分别处理——若存在 `.ai-discipline/docs/standards.md` 则完整 Read **该文件**；若存在 `.ai-discipline/docs/pitfalls.md` 则完整 Read **该文件**。缺哪个就跳过哪个，互不影响。入口内索引表「何时读」命中时，再完整 Read 对应专题/分册路径；未命中不读；点名路径不存在则跳过该路径。**禁止** Glob `.ai-discipline/docs/`。
 5. skill command 默认由**人**触发；未经人要求不得自行调用 command 抢路径。

@@ -83,7 +83,7 @@ npx discipline install [--root <dir>] [--hosts cursor,claude,codex]
 ## 日常怎么用（装完之后）
 
 1. 新会话：Cursor 锚点迫使 Agent **完整 Read** 仓根 `AGENTS.md`，再按其中协议读 `.ai-discipline/workflows/index.md` 路由 SOP。
-2. 意图清晰：命中 SOP → 按 `steps` 顺序 Read skill/rule；遵守 `optional` / `when`。
+2. 意图清晰：命中 SOP → 按 `steps` 顺序 Read skill/rule；遵守 step 修饰链（`when` / `confirm` → 是否 `use`）。
 3. 意图模糊 / 多命中难决：走 `ask-route`（选项 + 推荐），选定前不改业务代码。
 4. 中途插入：在聊天里用 `/` 触发已登记 command（如 `/add-logs`），只加载对应 skill，做完回到当前 SOP 阶段。
 5. 改纪律资产：用人触发的 `/discipline-author`（或直接改文件），然后 `validate` → `sync`（改 command 声明再 `install`）。

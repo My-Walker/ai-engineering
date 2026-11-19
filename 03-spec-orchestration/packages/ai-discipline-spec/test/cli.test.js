@@ -65,6 +65,18 @@ async function testBrokenRefFails() {
   console.log("ok broken-ref");
 }
 
+async function testWhenConfirmAllowed() {
+  const root = mktemp();
+  await installDiscipline(root, ["cursor"]);
+  const sop = path.join(root, ".ai-discipline", "workflows", "feature.md");
+  const doc = require("../scripts/lib/parse").readDoc(sop);
+  const plan = (doc.data.steps || []).find((s) => s.use === "skill:write-impl-plan");
+  assert.ok(plan && plan.when && plan.confirm === true);
+  const v = validateDiscipline(root);
+  assert.ok(v.ok, v.errors.join("\n"));
+  console.log("ok when+confirm allowed");
+}
+
 async function testSyncRewritesIndex() {
   const root = mktemp();
   await installDiscipline(root, ["cursor"]);
@@ -153,6 +165,7 @@ async function main() {
   await testInstallAndValidate();
   await testNoOverwriteSkill();
   await testBrokenRefFails();
+  await testWhenConfirmAllowed();
   await testSyncRewritesIndex();
   await testCommandShellOverwrite();
   await testForceOverwriteKeepsExtras();
