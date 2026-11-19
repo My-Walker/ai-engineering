@@ -22,10 +22,10 @@ README.md                    安装用户说明（会随 files 发布）
 DEVELOPMENT.md               本文件（不发布）
 seed/                        纪律正文种子 → install 补缺到业务仓 .ai-discipline/
   workflows/                 SOP（bugfix / feature / explore-review）
-  skills/                    原子 skill（含 ask-route、discipline-author 等）
-  rules/                     gate（否决）与 convention（合规提醒）；always 须 summary
+  skills/                    做法积木（原子 skill；含 ask-route、discipline-author 等）
+  rules/                     约束资产（gate 否决 / convention 短合规）；always 须 summary
   commands/index.yaml        挂哪些 skill command（≤10，必含 discipline-author）
-  docs/                      知识库：入口 standards/pitfalls + standards|pitfalls/ 专题与 _template
+  docs/                      项目知识库：入口 standards/pitfalls + standards|pitfalls/ 专题与 _template
 templates/
   agents-generated.md        sync：always summary + 强制加载（含 docs 分层；不解释 role）
 scripts/
@@ -38,15 +38,44 @@ test/cli.test.js             临时目录单测
 evals/                       评测预留（可空）
 ```
 
-## 写 rule：gate vs convention
+## 作者话术（防与宿主撞车）
+
+目录名 `skills` / `rules` / `docs` 与 `kind`、引用前缀（`skill:` / `rule:`）**不要改**。对人说明时用中文轴，避免当成 Cursor「通用 rules/skills 百科」：
+
+| 目录 | 称呼 | 轴 | 不是 |
+| :--- | :--- | :--- | :--- |
+| `skills/` | **做法积木** | HOW：单一任务怎么做 | 项目规范百科；任务主入口 |
+| `rules/` | **约束资产** | WHETHER：gate 否决 / convention 短合规且可 `rule:id` | 长规范、案例集（那是 docs） |
+| `docs/` | **项目知识库** | KNOW：standards / pitfalls，按「何时读」加载 | rule；**不能**写进 SOP `use: rule:…` |
+
+`convention` **少用、可空**：种子可以没有一条；空 ≠ 该并进 docs。它的硬价值是短文 + 稳定 id + 能挂 `steps`。
+
+## 放哪：决策树
+
+```text
+要写的是「一步怎么做」（可被 SOP/command 复用）？
+  → skill（做法积木）
+
+未满足就不得往下 / 不得宣称完成？
+  → rule + role: gate（必要时 always + summary）
+
+短、非否决、但要挂 steps 或被 skill 点名 rule:id？
+  → rule + role: convention（默认 always: false）
+
+长文、案例、勤增删的写法/坑、不需要进 SOP steps？
+  → docs（入口 standards.md / pitfalls.md + 专题子目录并登记「何时读」）
+  其中若抽出「硬必须」→ 再晋升为 gate 或（少见）convention；docs 可链 rule:id
+```
 
 | 选型 | 用当 |
 | :--- | :--- |
 | `role: gate` | 未满足 → **不得**进入下一步 / **不得**宣称完成（否决型） |
 | `role: convention` | 短合规提醒；可挂 `steps` / 被 skill 点名；**默认 `always: false`**；always 极少 |
-| 长规范 / 坑案例 | **不要**做成 rule → `.ai-discipline/docs/`：总则/索引进入口，专题进子目录并登记「何时读」；硬条再晋升 gate/convention |
+| docs 专题 | 长规范 / 坑案例；**不要**拆成大量 rule 冒充知识库 |
 
-差别是**语义角色**（否决 vs 合规提醒），不是强制力——本层均为软约束。AGENTS **不**写 role 教程；docs **分层加载**（入口全读、专题按需）。
+差别是**语义角色与可否引用**（否决 vs 短合规 vs 知识），不是强制力——本层均为软约束。AGENTS **不**写 role 教程；docs **分层加载**（入口全读、专题按需）。
+
+常见误读：`docs/standards/git-commit` 等内容**长得像**旧式「通用 rule」，但它不可进 SOP steps；真要阶段否决或短条可引用，再晋升为 rule。
 
 改 `seed/docs/**` 或 `templates/agents-generated.md` 后：`npm test`；业务仓要吃到新入口/模板：`install --force`（注意会盖同名 docs）或删对应文件后再 install。
 
