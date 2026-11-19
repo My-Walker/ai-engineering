@@ -16,7 +16,7 @@
 
 | 专题 id | 路径 | 何时读 | 一句话 |
 | :--- | :--- | :--- | :--- |
+| git-commit | `.ai-discipline/docs/standards/git-commit.md` | 用户要求生成/撰写 commit message，或执行/协助 git commit | 中文提交说明格式与范围确认 |
 | （例）typescript | `.ai-discipline/docs/standards/typescript.md` | 改动含 `.ts`/`.tsx` 或用户明确要求 TS 规范 | TypeScript 写法与工程约定 |
-| | | | |
 
 新建专题：复制 `standards/_template.md` → `standards/{id}.md`，并在本表登记一行。
