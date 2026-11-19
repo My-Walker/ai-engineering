@@ -1,6 +1,6 @@
 {
   "name": "@ai-engineering/discipline",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "aiDisciplineId": "ai-discipline",
   "description": "AI 规范纪律层：薄 AGENTS + SOP 组合 + 原子 skills + 少量 skill commands。",
   "repository": {
