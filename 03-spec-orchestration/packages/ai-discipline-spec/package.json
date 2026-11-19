@@ -9,7 +9,7 @@
     "directory": "03-spec-orchestration/packages/ai-discipline-spec"
   },
   "bin": {
-    "discipline": "./scripts/discipline.js"
+    "discipline": "scripts/discipline.js"
   },
   "scripts": {
     "test": "node test/cli.test.js",
