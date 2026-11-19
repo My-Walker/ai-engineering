@@ -1,0 +1,2 @@
+# npm bin shebang 必须是 LF；CRLF 会导致 publish 时剥掉 bin
+scripts/**/*.js text eol=lf
