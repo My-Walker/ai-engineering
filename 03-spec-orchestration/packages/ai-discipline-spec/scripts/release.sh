@@ -169,11 +169,11 @@ fi
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   echo "[dry-run] 将写入 package.json version=$NEW_VERSION"
-  echo "[dry-run] git add ${PKG_JSON_REL}"
-  echo "[dry-run] git commit -m 'chore(discipline): 发布 ${NEW_VERSION}'"
+  echo "[dry-run] git -C ${GIT_ROOT} add ${PKG_JSON_REL}"
+  echo "[dry-run] git -C ${GIT_ROOT} commit -m 'chore(discipline): 发布 ${NEW_VERSION}'（无变更则跳过）"
   echo "[dry-run] npm test"
-  echo "[dry-run] git push origin main"
-  echo "[dry-run] git tag -a $TAG -m '$TAG' && git push origin $TAG"
+  echo "[dry-run] git -C ${GIT_ROOT} push origin main"
+  echo "[dry-run] git -C ${GIT_ROOT} tag -a $TAG -m '$TAG' && git -C ${GIT_ROOT} push origin $TAG"
   echo "[dry-run] 结束后停在 main"
   echo
   echo "=== 手动发布（脚本不会执行）==="
@@ -192,15 +192,21 @@ pkg.version = process.argv[1];
 fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + '\n');
 " "$NEW_VERSION"
 
-git add "$PKG_JSON_REL"
-git commit -m "chore(discipline): 发布 ${NEW_VERSION}"
+# cwd 已在包目录；pathspec 须相对仓库根，故用 -C GIT_ROOT，避免路径叠一层
+git -C "$GIT_ROOT" add "$PKG_JSON_REL"
+if git -C "$GIT_ROOT" diff --cached --quiet; then
+  echo "[信息] package.json 无版本变更可提交，跳过 release commit"
+  git -C "$GIT_ROOT" reset HEAD -- "$PKG_JSON_REL" >/dev/null 2>&1 || true
+else
+  git -C "$GIT_ROOT" commit -m "chore(discipline): 发布 ${NEW_VERSION}"
+fi
 
 npm test
 
-git push origin main
+git -C "$GIT_ROOT" push origin main
 
-git tag -a "$TAG" -m "$TAG"
-git push origin "$TAG"
+git -C "$GIT_ROOT" tag -a "$TAG" -m "$TAG"
+git -C "$GIT_ROOT" push origin "$TAG"
 
 echo
 echo "=== 准备完成：已停在 main ==="
