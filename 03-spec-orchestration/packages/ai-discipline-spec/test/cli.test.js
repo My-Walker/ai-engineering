@@ -34,8 +34,13 @@ async function testInstallAndValidate() {
   assert.ok(agents.includes("缺哪个就跳过哪个"));
   assert.ok(agents.includes("禁止") && agents.includes("docs/"));
   assert.ok(agents.includes("建议正确门") || agents.includes("客观更正确"));
+  assert.ok(agents.includes("澄清结束") || agents.includes("不得执行"));
+  assert.ok(agents.includes("实现上限门") || agents.includes("已确认范围是上限"));
   assert.ok(
     fs.existsSync(path.join(root, ".ai-discipline", "rules", "design-depth-gate.md"))
+  );
+  assert.ok(
+    fs.existsSync(path.join(root, ".ai-discipline", "rules", "scope-ceiling-gate.md"))
   );
   console.log("ok install+validate");
 }

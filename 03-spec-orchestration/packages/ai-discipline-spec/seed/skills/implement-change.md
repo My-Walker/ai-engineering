@@ -12,14 +12,14 @@ description: 按已澄清且 settled 的范围实现功能；不重开设计；�
 
 ## 进入条件
 
-- `rule:clarify-gate` 已放行；影响行为的未决已关。
+- 澄清已结束（见 `rule:clarify-gate`）。
 - 实现范围已 settled（已确认的计划内容，或已确认的对话范围）。
 - 任务类型是新增/扩展能力，不是「只修已有错误行为」（后者走 `skill:apply-fix`）。
 
 ## 核心规则
 
-1. **实现已 settled 的工作**：不重新打开产品设计辩论；发现新的行为未决 → 停回 `skill:clarify-grill` / 澄清门。
-2. **范围**：仅已确认计划或对话范围；不做范围外重构。
+1. **实现已 settled 的工作**：不重新打开产品设计辩论；发现新的行为未决 → 澄清重新未结束，停回 `skill:clarify-grill` / 澄清门。
+2. **范围**：仅已确认计划或对话范围；不做范围外重构。服从 `rule:scope-ceiling-gate`。
 3. **TDD**：若本切片约定测试先行，先完成 `skill:tdd` 约定缝的红灯再写最少实现。
 4. **验证节奏**：实现过程中按需跑相关测试/类型检查；收尾交给 `skill:verify`（可含更全检查）。
 5. **不自动 commit / 关单 / 开 PR**。
@@ -41,4 +41,5 @@ description: 按已澄清且 settled 的范围实现功能；不重开设计；�
 ## 禁止
 
 - 「边写边重新设计」且不回头澄清。
+- 用建议正确门的「更正确」越过 `rule:scope-ceiling-gate`，追加用户未确认的行为。
 - 把 issue tracker / 多 worktree 编排当成本 skill 前置条件。
