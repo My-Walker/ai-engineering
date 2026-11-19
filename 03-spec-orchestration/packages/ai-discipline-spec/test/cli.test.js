@@ -33,7 +33,7 @@ async function testInstallAndValidate() {
   assert.ok(agents.includes("docs/standards.md"));
   assert.ok(agents.includes("缺哪个就跳过哪个"));
   assert.ok(agents.includes("禁止") && agents.includes("docs/"));
-  assert.ok(agents.includes("设计深度门") || agents.includes("完整正确方案"));
+  assert.ok(agents.includes("建议正确门") || agents.includes("客观更正确"));
   assert.ok(
     fs.existsSync(path.join(root, ".ai-discipline", "rules", "design-depth-gate.md"))
   );
