@@ -3,7 +3,7 @@ kind: sop
 id: explore-review
 name: 只读分析
 description: 只读分析/评审/答疑；默认不改业务代码
-triggers: [分析, 评审, 答疑, review, 只读分析, 设计评审]
+triggers: [分析, 评审, 答疑, review, 只读分析, 设计评审, 代码评审]
 priority: 70
 steps:
   - use: skill:explore-scope

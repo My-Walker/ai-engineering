@@ -3,7 +3,7 @@ kind: sop
 id: feature
 name: 功能开发
 description: 新功能/新模块的主路径
-triggers: [新功能, 新模块, 需求落地, 实现功能, 模块编写]
+triggers: [新功能, 新模块, 需求落地, 实现功能, 模块编写, 新增, 需求调整]
 priority: 90
 steps:
   - use: skill:clarify-grill

@@ -20,6 +20,13 @@
 - **正确做法**：未结束只可继续澄清。结束后不得越过已确认范围；新的行为未决使澄清重新未结束。服从 `rule:clarify-gate` 与 `rule:scope-ceiling-gate`。
 - **相关路径**：`.ai-discipline/rules/clarify-gate.md`、`.ai-discipline/rules/scope-ceiling-gate.md`
 
+### 描述需求后再说「分析」却锁进只读 SOP
+
+- **症状**：用户先讲需求/要落地，再跟「分析/评审」；Agent 只看见方式词，直接进 `sop:explore-review`。
+- **错误做法**：单侧 trigger 命中就开跑；或为迁就口语把过漂的词塞进 feature/bugfix 词表。
+- **正确做法**：类型信号与方式信号并存、或意图不清 → `skill:ask-route`；trigger 只收语义贴合的词。服从 `rule:route-gate`。
+- **相关路径**：`.ai-discipline/rules/route-gate.md`、`.ai-discipline/skills/ask-route.md`
+
 （业务仓可在下方继续追加本项目坑。案例多了拆到 `pitfalls/`。）
 
 ## 分册索引（可选）

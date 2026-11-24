@@ -3,7 +3,7 @@ kind: sop
 id: bugfix
 name: 缺陷修复
 description: 缺陷/报错的主路径
-triggers: [缺陷, bug, 报错, 故障, 异常排查, 修复bug]
+triggers: [缺陷, bug, 报错, 故障, 修复bug, 崩溃]
 priority: 100
 steps:
   - use: skill:clarify-grill
