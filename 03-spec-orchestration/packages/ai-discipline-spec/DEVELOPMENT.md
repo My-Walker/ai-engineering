@@ -108,7 +108,9 @@ node "…/scripts/discipline.js" install --root "D:/path/to/sandbox" --hosts cur
 
 ## 发版
 
-对齐 `@mdd-ai-eng/specs`：在本包目录、伞仓 **`main`**、工作区干净时执行发布准备；脚本**不**执行 `npm publish`（留给你处理浏览器 2FA）。
+在本包目录、伞仓 **`main`**、工作区干净时执行发布准备；脚本**不**执行 `npm publish`（留给维护者处理浏览器 2FA）。
+
+**边界（硬）：** Agent / 自动化跑完 `npm run release`（或 `scripts/release.sh`）即收工。即使用户说「发布 npm」，也**不得**代跑 `npm publish`；仅可提示维护者本机手动执行。除非用户**另行明确**「连 publish 也一起执行」，才可越此界。
 
 ```bash
 # 指定版本（推荐）
@@ -121,7 +123,7 @@ npm run release -- --bump patch
 npm run release -- --dry-run 0.1.1
 ```
 
-流程：升版本并提交 → `npm test` → 推 `main` → 打 `discipline-vX.Y.Z` tag → 打印手动发布命令。然后：
+流程：升版本并提交 → `npm test` → 推 `main` → 打 `discipline-vX.Y.Z` tag → **打印**手动发布命令后结束。维护者本机再执行：
 
 ```bash
 cd 03-spec-orchestration/packages/ai-discipline-spec

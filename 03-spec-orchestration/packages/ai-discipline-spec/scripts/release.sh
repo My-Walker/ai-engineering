@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # 准备 npm 发布（伞仓单 main）：升版本 → 检查 → 推 main → 打 tag。
 # 不执行 npm publish；结束后停在 main，打印手动发布命令。
+# Agent/自动化：本脚本结束后不得代跑 npm publish（留给人 + 2FA）；除非用户另行明确要求。
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -36,6 +37,7 @@ usage() {
 定版本须二选一：显式版本 或 --bump；--dry-run 可与其一组合。
 Git tag 使用 discipline-vX.Y.Z（避免多规范包共用 vX.Y.Z 冲突）。
 脚本不会执行 npm publish。
+Agent/自动化跑完本脚本即停，勿代跑 npm publish（除非用户另行明确要求）。
 EOF
 }
 
@@ -176,7 +178,7 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
   echo "[dry-run] git -C ${GIT_ROOT} tag -a $TAG -m '$TAG' && git -C ${GIT_ROOT} push origin $TAG"
   echo "[dry-run] 结束后停在 main"
   echo
-  echo "=== 手动发布（脚本不会执行）==="
+  echo "=== 手动发布（脚本不会执行；Agent/自动化勿代跑）==="
   echo "  cd ${PACKAGE_ROOT}"
   echo "  npm publish"
   echo "发布完成后："
@@ -213,9 +215,11 @@ echo "=== 准备完成：已停在 main ==="
 echo "包版本: $NEW_VERSION"
 echo "Git tag: $TAG（伞仓 ai-engineering）"
 echo
-echo "请手动发布（浏览器 2FA 按 npm 提示完成即可）："
+echo "请维护者本机手动发布（浏览器 2FA 按 npm 提示完成即可）："
 echo "  cd ${PACKAGE_ROOT}"
 echo "  npm publish"
+echo
+echo "Agent/自动化：到此收工，不得代跑 npm publish（除非用户另行明确要求）。"
 echo
 echo "发布完成后建议："
 echo "  npm view @ai-engineering/discipline version"
