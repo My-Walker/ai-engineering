@@ -155,3 +155,6 @@ vite.config.ts.timestamp-*
 
 # 临时存储
 design-assets/
+
+# ai-discipline 省心编排：本机 spec/runtime（跨切片真源，默不入库）
+.scratch/

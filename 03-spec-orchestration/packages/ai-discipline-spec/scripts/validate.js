@@ -6,7 +6,7 @@ const { disciplineRoot, listMdFiles } = require("./lib/fs-util");
 const { readDoc, parseCommandsYaml } = require("./lib/parse");
 
 function refKindId(ref) {
-  const m = String(ref).match(/^(skill|rule|sop):(.+)$/);
+  const m = String(ref).match(/^(skill|rule|sop|dispatch):(.+)$/);
   if (!m) return null;
   return { kind: m[1], id: m[2] };
 }
@@ -94,12 +94,21 @@ function validateDiscipline(rootDir) {
         errors.push(`${file}: 无效 steps.use: ${JSON.stringify(step)}`);
         continue;
       }
-      if (parsed.kind !== "skill" && parsed.kind !== "rule") {
-        errors.push(`${file}: steps 只能引用 skill|rule: ${use}`);
+      if (
+        parsed.kind !== "skill" &&
+        parsed.kind !== "rule" &&
+        parsed.kind !== "dispatch"
+      ) {
+        errors.push(`${file}: steps 只能引用 skill|rule|dispatch: ${use}`);
         continue;
       }
-      if (!byKind[parsed.kind].has(parsed.id)) {
+      // dispatch:<skillId> → 目标须为已存在的 skill；做法见 skill:dispatch-run
+      const resolveKind = parsed.kind === "dispatch" ? "skill" : parsed.kind;
+      if (!byKind[resolveKind].has(parsed.id)) {
         errors.push(`${file}: 引用不存在 ${use}`);
+      }
+      if (parsed.kind === "dispatch" && !byKind.skill.has("dispatch-run")) {
+        errors.push(`${file}: 使用 dispatch: 须存在 skill:dispatch-run`);
       }
       if (
         typeof step === "object" &&

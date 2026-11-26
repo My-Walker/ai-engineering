@@ -11,3 +11,5 @@ commands:
     title: 双轴代码评审
   - skill: handoff
     title: 会话交接
+  - skill: publish-spec
+    title: 发布任务规格

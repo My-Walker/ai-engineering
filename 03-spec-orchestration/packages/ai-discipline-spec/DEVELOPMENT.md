@@ -149,11 +149,17 @@ Windows 下 seed 多为 CRLF；解析必须经 `parse.js` 归一化，勿再引�
 
 ## CLI 语义（实现约束）
 
-- `validate`：失败 exit ≠ 0；检查 kind/id/name/description、路径=`id`、steps/inserts（含 `confirm` 须布尔）、command 约束、`ask-route` 存在。
-- `sync`：先 validate；重写 `workflows/index.md`（含 priority）；重写 AGENTS 标记块（总禁令 = always `summary`；强制加载含 ask-route；**无** command 表）。
+- `validate`：失败 exit ≠ 0；检查 kind/id/name/description、路径=`id`、steps/inserts（含 `confirm` 须布尔；`use` 可为 `skill|rule|dispatch`；`dispatch:<id>` 须存在对应 skill 且存在 `dispatch-run`）、command 约束、`ask-route` 存在。
+- `sync`：先 validate；重写 `workflows/index.md`（含 priority）；重写 AGENTS 标记块（总禁令 = always `summary`；强制加载含 ask-route 与 dispatch 语义；**无** command 表）。
 - `install`：seed 默认 **补缺不覆盖**（含 `docs/`）；`--force` 时同名 skill/sop/rule/docs 与 `commands/index.yaml` **整文件覆盖**（不删本地多出来的）→ 宿主薄壳覆盖 + 清单外删除 → sync。Cursor command 正文标题下先写 skill `description`（供 `/` 预览），再写执行三步。
 
 薄壳统一三步：Read `.ai-discipline/skills/{id}.md` → 执行 → 回到当前任务/SOP 阶段。
+
+## 省心编排（种子约定）
+
+- Spec：`.scratch/<feature>/spec.md`；runtime：同目录 `runtime.md`。未开闸不写；开闸后有新确认自动增量（`clarify-grill` + `publish-spec`）。
+- `feature`/`bugfix`：澄清（含开闸/增量）→ 终稿 `publish-spec`（可跳过琐碎不写）→ `spec-gate` → 琐碎同窗 / 非琐碎 `dispatch:*` → `join-dispatch` → `verify`。
+- `dispatch` 软派发（Task）；串行；单 feature 上限见 `dispatch-run`；无 hook 硬拦。
 
 ## 验收场景（手工）
 
@@ -162,7 +168,8 @@ Windows 下 seed 多为 CRLF；解析必须经 `parse.js` 归一化，勿再引�
 3. 缺陷无证据 → evidence-gate；可走向 `/add-logs`
 4. `/add-logs` 等人触发 command 只加载对应 skill；`/` 预览应先见用途句而非套话
 5. 再次 install 不覆盖用户已改 skill；可刷新 command 薄壳与 sync 生成物；`install --force` 应恢复 seed 同名正文且保留本地多余文件
+6. `validate` 接受种子中的 `dispatch:implement-change`；坏 `dispatch:` 目标应失败
 
 ## 非本包范围（当前）
 
-与 mdd 迁移/卸载、用户级路径、长 SOP 状态文件、Codex 字段深度兼容矩阵、完整 evals 题集。
+与 mdd 迁移/卸载、用户级路径、并行 fan-out、Cloud 多后端、Matt 全套手搓兼容包、Codex 字段深度兼容矩阵、完整 evals 题集。

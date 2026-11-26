@@ -83,13 +83,13 @@ npx discipline install [--root <dir>] [--hosts cursor,claude,codex]
 ## 日常怎么用（装完之后）
 
 1. 新会话：Cursor 锚点迫使 Agent **完整 Read** 仓根 `AGENTS.md`，再按其中协议读 `.ai-discipline/workflows/index.md` 路由 SOP。
-2. 意图清晰：命中 SOP → 按 `steps` 顺序 Read skill/rule；遵守 step 修饰链（`when` / `confirm` → 是否 `use`）。
+2. 意图清晰：命中 SOP → 按 `steps` 顺序处理 `skill` / `rule` / `dispatch`。澄清：**未开闸不写 spec**；条件到了提醒开闸；**开闸后有新确认则自动增量**。非琐碎终稿对齐后：`dispatch:<skillId>` → `join-dispatch` → `verify`。
 3. 意图模糊 / 多命中难决：走 `ask-route`（选项 + 推荐），选定前不改业务代码。
-4. 中途插入：在聊天里用 `/` 触发已登记 command（如 `/add-logs`），只加载对应 skill，做完回到当前 SOP 阶段。
+4. 中途插入（侧门）：`/` 触发已登记 command（如 `/publish-spec`、`/handoff`），只加载对应 skill，做完回到当前 SOP 阶段。
 5. 改纪律资产：用人触发的 `/discipline-author`（或直接改文件），然后 `validate` → `sync`（改 command 声明再 `install`）。
 
-预挂的 command：`discipline-author`、`clarify-grill`、`add-logs`、`verify`、`code-review`、`handoff`。  
-`/handoff` 默认把交接文档写到系统临时目录，对话只给绝对路径；新会话 `Read` 该路径续跑（不要靠复制整段聊天）。
+预挂的 command：`discipline-author`、`clarify-grill`、`add-logs`、`verify`、`code-review`、`handoff`、`publish-spec`。  
+`/handoff` 须链到 spec；默认写系统临时目录，对话只给绝对路径。`.scratch/` 建议 gitignore。
 
 ## 与旧包
 

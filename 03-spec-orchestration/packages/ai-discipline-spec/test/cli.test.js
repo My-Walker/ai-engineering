@@ -82,6 +82,38 @@ async function testWhenConfirmAllowed() {
   console.log("ok when+confirm allowed");
 }
 
+async function testDispatchStepAllowed() {
+  const root = mktemp();
+  await installDiscipline(root, ["cursor"]);
+  const sop = path.join(root, ".ai-discipline", "workflows", "feature.md");
+  const doc = require("../scripts/lib/parse").readDoc(sop);
+  const disp = (doc.data.steps || []).find(
+    (s) => typeof s.use === "string" && s.use.startsWith("dispatch:")
+  );
+  assert.ok(disp, "feature SOP 应含 dispatch: 步");
+  assert.ok(
+    fs.existsSync(path.join(root, ".ai-discipline", "skills", "dispatch-run.md"))
+  );
+  const v = validateDiscipline(root);
+  assert.ok(v.ok, v.errors.join("\n"));
+  const agents = fs.readFileSync(path.join(root, "AGENTS.md"), "utf8");
+  assert.ok(agents.includes("dispatch:"));
+  console.log("ok dispatch step allowed");
+}
+
+async function testDispatchBrokenTargetFails() {
+  const root = mktemp();
+  await installDiscipline(root, ["cursor"]);
+  const sop = path.join(root, ".ai-discipline", "workflows", "feature.md");
+  let text = fs.readFileSync(sop, "utf8");
+  text = text.replace("dispatch:implement-change", "dispatch:not-a-skill");
+  fs.writeFileSync(sop, text, "utf8");
+  const v = validateDiscipline(root);
+  assert.ok(!v.ok);
+  assert.ok(v.errors.some((e) => e.includes("not-a-skill")));
+  console.log("ok dispatch broken-target");
+}
+
 async function testSyncRewritesIndex() {
   const root = mktemp();
   await installDiscipline(root, ["cursor"]);
@@ -171,6 +203,8 @@ async function main() {
   await testNoOverwriteSkill();
   await testBrokenRefFails();
   await testWhenConfirmAllowed();
+  await testDispatchStepAllowed();
+  await testDispatchBrokenTargetFails();
   await testSyncRewritesIndex();
   await testCommandShellOverwrite();
   await testForceOverwriteKeepsExtras();
