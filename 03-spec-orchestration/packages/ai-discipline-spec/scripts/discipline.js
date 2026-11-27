@@ -13,11 +13,12 @@ function printHelp() {
 用法:
   discipline validate [--root <dir>]
   discipline sync [--root <dir>] [--claude]
-  discipline install [--root <dir>] [--hosts cursor,claude,codex] [--force]
+  discipline install [--root <dir>] [--hosts cursor,claude,codex] [--force] [--no-gitignore-scratch]
 
 --force：用 seed 整文件覆盖已存在的同名 workflows/skills/rules/docs 与 commands/index.yaml；
         不删除本地多出来的资产；末尾仍 sync 重写 index 与 AGENTS 标记块。
         会丢掉同名文件的本地修改，先提交或备份。
+--no-gitignore-scratch：不向仓根 .gitignore 追加 .scratch/（默认会幂等追加，便于本机 spec/runtime）。
 
 未指定 --root 时，安装/校验目标为当前工作目录（或作为依赖安装时的业务项目根）。
 `);

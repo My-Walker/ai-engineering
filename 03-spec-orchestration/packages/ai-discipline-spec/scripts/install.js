@@ -8,6 +8,7 @@ const {
   disciplineRoot,
   findHostRoot,
   writeIfChanged,
+  ensureScratchGitignore,
 } = require("./lib/fs-util");
 const { installHostCommands } = require("./lib/hosts");
 const { syncDiscipline } = require("./sync");
@@ -84,7 +85,11 @@ function askHosts() {
   });
 }
 
-async function installDiscipline(hostRoot, hosts, { force = false } = {}) {
+async function installDiscipline(
+  hostRoot,
+  hosts,
+  { force = false, gitignoreScratch = true } = {}
+) {
   if (force) {
     console.log(
       "警告: --force 将用 seed 覆盖已存在的同名 skill/sop/rule/docs 与 commands/index.yaml（不删除本地多出来的文件）"
@@ -102,9 +107,18 @@ async function installDiscipline(hostRoot, hosts, { force = false } = {}) {
     console.log(`[host ${label}] ${a.filePath}`);
   }
 
+  let gitignoreAction = null;
+  if (gitignoreScratch) {
+    gitignoreAction = ensureScratchGitignore(hostRoot);
+    const label = { skip: "跳过", update: "更新", write: "写入" }[gitignoreAction.action];
+    console.log(`[gitignore ${label}] ${gitignoreAction.filePath}`);
+  } else {
+    console.log("[gitignore 跳过] --no-gitignore-scratch");
+  }
+
   const syncOpts = { claude: hosts.includes("claude") };
   const syncResult = syncDiscipline(hostRoot, syncOpts);
-  return { seedActions, hostActions, syncResult };
+  return { seedActions, hostActions, gitignoreAction, syncResult };
 }
 
 async function runInstall(argv = process.argv.slice(2)) {
@@ -115,6 +129,7 @@ async function runInstall(argv = process.argv.slice(2)) {
   })();
 
   const force = argv.includes("--force");
+  const gitignoreScratch = !argv.includes("--no-gitignore-scratch");
 
   let hosts = parseHostsArg(argv);
   if (!hosts || hosts.length === 0) {
@@ -136,7 +151,8 @@ async function runInstall(argv = process.argv.slice(2)) {
   console.log(`安装根目录: ${hostRoot}`);
   console.log(`宿主: ${hosts.join(", ")}`);
   if (force) console.log("模式: --force（同名覆盖）");
-  const out = await installDiscipline(hostRoot, hosts, { force });
+  if (!gitignoreScratch) console.log("模式: --no-gitignore-scratch");
+  const out = await installDiscipline(hostRoot, hosts, { force, gitignoreScratch });
   if (out.syncResult && !out.syncResult.ok) {
     process.exitCode = 1;
   }

@@ -151,7 +151,7 @@ Windows 下 seed 多为 CRLF；解析必须经 `parse.js` 归一化，勿再引�
 
 - `validate`：失败 exit ≠ 0；检查 kind/id/name/description、路径=`id`、steps/inserts（含 `confirm` 须布尔；`use` 可为 `skill|rule|dispatch`；`dispatch:<id>` 须存在对应 skill 且存在 `dispatch-run`）、command 约束、`ask-route` 存在。
 - `sync`：先 validate；重写 `workflows/index.md`（含 priority）；重写 AGENTS 标记块（总禁令 = always `summary`；强制加载含 ask-route 与 dispatch 语义；**无** command 表）。
-- `install`：seed 默认 **补缺不覆盖**（含 `docs/`）；`--force` 时同名 skill/sop/rule/docs 与 `commands/index.yaml` **整文件覆盖**（不删本地多出来的）→ 宿主薄壳覆盖 + 清单外删除 → sync。Cursor command 正文标题下先写 skill `description`（供 `/` 预览），再写执行三步。
+- `install`：seed 默认 **补缺不覆盖**（含 `docs/`）；`--force` 时同名 skill/sop/rule/docs 与 `commands/index.yaml` **整文件覆盖**（不删本地多出来的）→ 宿主薄壳覆盖 + 清单外删除 → 默认幂等追加仓根 `.gitignore` 的 `.scratch/`（`--no-gitignore-scratch` 可关）→ sync。Cursor command 正文标题下先写 skill `description`（供 `/` 预览），再写执行三步。
 
 薄壳统一三步：Read `.ai-discipline/skills/{id}.md` → 执行 → 回到当前任务/SOP 阶段。
 

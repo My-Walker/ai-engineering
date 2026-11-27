@@ -69,14 +69,14 @@ npx discipline install --root "D:/path/to/your-app" --hosts cursor --force
 ```bash
 npx discipline validate [--root <dir>]
 npx discipline sync [--root <dir>] [--claude]
-npx discipline install [--root <dir>] [--hosts cursor,claude,codex]
+npx discipline install [--root <dir>] [--hosts cursor,claude,codex] [--no-gitignore-scratch]
 ```
 
 | 命令 | 作用 |
 | :--- | :--- |
 | `validate` | 校验 schema、路径=`id`、steps/inserts 引用、command ≤10 且含 `discipline-author` |
 | `sync` | 先 validate；重写 `workflows/index.md` 与 AGENTS 标记块（及已有/指定的 `CLAUDE.md`） |
-| `install` | 补缺 seed（可选 `--force` 同名覆盖）→ 写宿主薄壳 → sync |
+| `install` | 补缺 seed（可选 `--force` 同名覆盖）→ 写宿主薄壳 → 默认幂等追加 `.gitignore` 中 `.scratch/` → sync；`--no-gitignore-scratch` 可关 |
 
 改了 skill/SOP/rule 正文后一般只需 `validate` + `sync`。改了 `commands/index.yaml` 或要刷新薄壳说明时再 `install`。
 
@@ -89,7 +89,8 @@ npx discipline install [--root <dir>] [--hosts cursor,claude,codex]
 5. 改纪律资产：用人触发的 `/discipline-author`（或直接改文件），然后 `validate` → `sync`（改 command 声明再 `install`）。
 
 预挂的 command：`discipline-author`、`clarify-grill`、`add-logs`、`verify`、`code-review`、`handoff`、`publish-spec`。  
-`/handoff` 须链到 spec；默认写系统临时目录，对话只给绝对路径。`.scratch/` 建议 gitignore。
+`/handoff` 须链到 spec；默认写系统临时目录，对话只给绝对路径。  
+`install` 默认向仓根 `.gitignore` 幂等追加 `.scratch/`（本机 spec/runtime）；团队要入库可删该段或加 `--no-gitignore-scratch`。
 
 ## 与旧包
 

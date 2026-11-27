@@ -69,6 +69,40 @@ function listMdFiles(dir) {
     .map((f) => path.join(dir, f));
 }
 
+/** install 写入 .gitignore 的标记；已有 `.scratch/` 行或本标记则跳过 */
+const SCRATCH_GITIGNORE_MARKER = "# ai-discipline scratch";
+
+/**
+ * 幂等追加 `.scratch/` 到仓根 `.gitignore`（不整文件重写）。
+ * 团队要入库可删本段，或 install --no-gitignore-scratch。
+ */
+function ensureScratchGitignore(hostRoot) {
+  const filePath = path.join(hostRoot, ".gitignore");
+  const block = [
+    SCRATCH_GITIGNORE_MARKER,
+    "# 本机 spec/runtime；要入库可删本段，或 install --no-gitignore-scratch",
+    ".scratch/",
+    "",
+  ].join("\n");
+
+  const existing = fs.existsSync(filePath) ? fs.readFileSync(filePath, "utf8") : null;
+  if (existing !== null) {
+    if (
+      existing.includes(SCRATCH_GITIGNORE_MARKER) ||
+      /(^|[\r\n])\.scratch\/?[ \t]*(#.*)?(\r?\n|$)/.test(existing)
+    ) {
+      return { action: "skip", filePath };
+    }
+    const sep = existing.endsWith("\n") || existing === "" ? "" : "\n";
+    const next = `${existing}${sep}\n${block}`;
+    fs.writeFileSync(filePath, next, "utf8");
+    return { action: "update", filePath };
+  }
+
+  fs.writeFileSync(filePath, block, "utf8");
+  return { action: "write", filePath };
+}
+
 module.exports = {
   PACKAGE_ID,
   START,
@@ -82,4 +116,6 @@ module.exports = {
   escapeRegExp,
   replaceMarkedBlock,
   listMdFiles,
+  SCRATCH_GITIGNORE_MARKER,
+  ensureScratchGitignore,
 };

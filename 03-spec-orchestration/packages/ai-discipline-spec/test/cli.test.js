@@ -7,6 +7,10 @@ const assert = require("assert");
 const { installDiscipline } = require("../scripts/install");
 const { validateDiscipline } = require("../scripts/validate");
 const { syncDiscipline } = require("../scripts/sync");
+const {
+  ensureScratchGitignore,
+  SCRATCH_GITIGNORE_MARKER,
+} = require("../scripts/lib/fs-util");
 
 function mktemp() {
   return fs.mkdtempSync(path.join(os.tmpdir(), "ai-discipline-"));
@@ -27,6 +31,8 @@ async function testInstallAndValidate() {
   assert.ok(
     fs.existsSync(path.join(root, ".ai-discipline", "docs", "standards", "_template.md"))
   );
+  assert.ok(fs.existsSync(path.join(root, ".gitignore")));
+  assert.ok(fs.readFileSync(path.join(root, ".gitignore"), "utf8").includes(".scratch/"));
   const agents = fs.readFileSync(path.join(root, "AGENTS.md"), "utf8");
   assert.ok(agents.includes("ai-discipline:start"));
   assert.ok(agents.includes("ask-route.md"));
@@ -112,6 +118,39 @@ async function testDispatchBrokenTargetFails() {
   assert.ok(!v.ok);
   assert.ok(v.errors.some((e) => e.includes("not-a-skill")));
   console.log("ok dispatch broken-target");
+}
+
+async function testScratchGitignoreIdempotent() {
+  const root = mktemp();
+  const out = await installDiscipline(root, ["cursor"]);
+  const gi = path.join(root, ".gitignore");
+  assert.ok(fs.existsSync(gi));
+  const body1 = fs.readFileSync(gi, "utf8");
+  assert.ok(body1.includes(SCRATCH_GITIGNORE_MARKER));
+  assert.ok(body1.includes(".scratch/"));
+  assert.ok(out.gitignoreAction && out.gitignoreAction.action === "write");
+
+  const again = ensureScratchGitignore(root);
+  assert.strictEqual(again.action, "skip");
+  const second = await installDiscipline(root, ["cursor"]);
+  assert.ok(second.gitignoreAction && second.gitignoreAction.action === "skip");
+  assert.strictEqual(fs.readFileSync(gi, "utf8"), body1);
+
+  const root2 = mktemp();
+  fs.writeFileSync(path.join(root2, ".gitignore"), "node_modules/\n", "utf8");
+  const appended = ensureScratchGitignore(root2);
+  assert.strictEqual(appended.action, "update");
+  const body2 = fs.readFileSync(path.join(root2, ".gitignore"), "utf8");
+  assert.ok(body2.startsWith("node_modules/"));
+  assert.ok(body2.includes(".scratch/"));
+
+  const root3 = mktemp();
+  const skipped = await installDiscipline(root3, ["cursor"], {
+    gitignoreScratch: false,
+  });
+  assert.strictEqual(skipped.gitignoreAction, null);
+  assert.ok(!fs.existsSync(path.join(root3, ".gitignore")));
+  console.log("ok scratch gitignore");
 }
 
 async function testSyncRewritesIndex() {
@@ -205,6 +244,7 @@ async function main() {
   await testWhenConfirmAllowed();
   await testDispatchStepAllowed();
   await testDispatchBrokenTargetFails();
+  await testScratchGitignoreIdempotent();
   await testSyncRewritesIndex();
   await testCommandShellOverwrite();
   await testForceOverwriteKeepsExtras();
